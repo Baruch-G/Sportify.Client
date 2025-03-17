@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="navBar">
+        <div id="leftNavBar">
+          <div id="showUserLeft">
+            <label id="userName"></label>
+          </div>
+          <div id="indexWithLogo">
+            <a href="../html/index.html">
+              <img
+                src="../pictures/Sportify.png"
+                id="imgIconNavBar"
+                alt="icon"
+                style="width: 75px;; height: 75px; vertical-align: middle"
+              />
+            </a>
+          </div>
+          <div id="login">
+            <a href="../html/Login.html"class="navbarBtn">
+              <img
+                src="../pictures/user_1077063.png"
+                id="imgIconNavBar"
+                alt="icon"
+                style="width: 20px; height: 20px; vertical-align: middle"
+              />
+            </a>
+            <a id="cmdNav" href="../html/Login.html">Login</a>
+          </div>
+          <div id="calendar">
+            <a href="../html/calendarPerUser.html"class="navbarBtn">
+              <img
+                src="../pictures/calendar_684806.png"
+                id="imgIconNavBar"
+                alt="icon"
+                style="width: 20px; height: 20px; vertical-align: middle"
+              /></a>
+            <a id="cmdNav" href="../html/calendarPerUser.html" class="navbarBtn">Calendar</a>
+          </div>
+          <div id="MapView">
+            <a href="../html/mapWiev.html"class="navbarBtn">
+              <img
+                src="../pictures/map_3721845.png"
+                id="imgIconNavBar"
+                alt="icon"
+                style="width: 20px; height: 20px; vertical-align: middle"
+              />
+            </a>
+            <a id="cmdNav" href="../html/mapWiev.html"class="navbarBtn">Map View</a>
+          </div>
+          <div id="coaches">
+            <a href="../html/coachesPerUser.html"class="navbarBtn">
+              <img
+                src="../pictures/user_1077063.png"
+                id="imgIconNavBar"
+                alt="icon"
+                style="width: 20px; height: 20px; vertical-align: middle"
+              />
+            </a>
+            <a id="cmdNav" href="../html/coachesPerUser.html"class="navbarBtn">Coaches</a>
+          </div>
+           
+        <i class="fa-solid fa-bars menu-icon" onclick="toggleSidebar()"></i>
+      </div>
+      <div class="sidebar" id="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()">×</button>
+        <ul>
+           <li><a href="../html/Login.html">Login</a></li>
+           <li><a href="../html/calendarPerUser.html">Calendar</a></li>
+           <li><a href="../html/mapWiev.html">Map View</a></li>
+           <li><a href="../html/coachesPerUser.html">Coaches</a></li>
+        </ul>
+      </div>
+    </div>
+    <br>
+    <div id="loginIn">
+        <img src="../pictures/Capture d’écran 2025-03-15 à 20.38.18.png">
+        <div id="loginInfo">
+            <h1>Log In</h1>
+                <form id="loginForm">
+                    <div id ="usernameDiv">
+                        <label for="username">User name or Email</label>
+                        <input type="text" id="usernameInput" name="username" required placeholder="exemple.mail@gmail.com"/>
+                    </div>
+                    <div id="passwordDiv">
+                        <label for="password">Password</label>
+                        <input type="password" id="passwordInput" name="password" required placeholder="enter at least 8+ chararcters"/>
+                    </div>
+                    <div id="checkboxdiv">
+                        <input type="checkbox" id="rememberMe" name="rememberMe"/>
+                        <label for="rememberMe">Remember Me</label>
+                    </div>
+                    <button type="submit" id="submitButton">Login</button>
+                    <br>
+                </form>
+            <div id="notOPtionToLogin">
+                <a href="/resetPasword.html">Forgot password</a>
+                <a href="../html/contactUs.html">Need Help Contact Us</a>
+                <a href="../html/signIn.html">Dont have an acount Sign In</a>
+            </div>
+            <div id="loginError">
+                <p id="errorText"></p>
+        </div>
+        <div id="SigninWith">
+            <p>Or Sign In With</p>
+            <div id="buttonDiv">
+                <button id="googleSignIn"></button>
+                <button id="facebookSignIn"></button>
+                <button id="appleSignIn"></button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+  </body>
