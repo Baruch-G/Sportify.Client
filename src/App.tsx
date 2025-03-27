@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Events from './pages/Events'
 
+
 function App() {
   return (
     <>
