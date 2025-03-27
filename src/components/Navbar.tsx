@@ -20,32 +20,53 @@ const navPages: NavItem[] = [
 ];
 
 const Navbar: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleAvatarClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setMenuAnchor(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
+  const handleMobileMenuClick = (event: MouseEvent<HTMLElement>) => {
+    setMobileMenuAnchor(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuAnchor(null);
   };
 
   return (
     <AppBar sx={{ backgroundColor: 'white', color: 'black' }} position="static">
-      <Toolbar>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
         <img src="sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 16 }} />
 
         {isMobile ? (
           // Mobile Menu
           <>
-            <IconButton edge="start" color="inherit">
+            <IconButton edge="start" color="inherit" onClick={handleMobileMenuClick}>
               <MenuIcon />
             </IconButton>
+            <Menu anchorEl={mobileMenuAnchor} open={Boolean(mobileMenuAnchor)} onClose={handleMobileMenuClose}>
+              {navPages.map((item, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={() => {
+                    navigate(item.path);
+                    handleMobileMenuClose();
+                  }}
+                >
+                  {item.title}
+                </MenuItem>
+              ))}
+            </Menu>
           </>
         ) : (
           // Desktop Menu
@@ -66,9 +87,9 @@ const Navbar: React.FC = () => {
         <IconButton sx={{ marginLeft: 'auto' }} onClick={handleAvatarClick}>
           <Avatar alt="User Avatar" src="/avatar.jfif" />
         </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
