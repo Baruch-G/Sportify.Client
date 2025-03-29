@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography, Grid, Avatar, Rating } from '@mui/material';
-import { DateRange, LocationOn, People } from '@mui/icons-material';
+import { DateRange, LocationOn, Timer } from '@mui/icons-material';
 
 interface Address {
     addressLine1: string;
@@ -50,10 +50,10 @@ const EventCard = (props: Event) => {
                 </Grid>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
                     <Grid item>
-                        <People />
+                        <Timer />
                     </Grid>
                     <Grid item>
-                        <Typography variant="body2">Group</Typography>
+                        <Typography variant="body2">{`${props.duration}h`}</Typography>
                     </Grid>
                 </Grid>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
