@@ -8,33 +8,22 @@ import Map, { Source, Layer, CircleLayerSpecification } from 'react-map-gl/mapli
 import { Geometry, Point, type FeatureCollection, type GeoJsonProperties } from 'geojson';
 import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
-const EntityLoader = () => {
+interface EntityLoaderProps {
+    eventEntities : Event[]
+}
+
+const EntityLoader = (props: EntityLoaderProps) => {
     //   const entities = useSelector((state: RootState) => state.entities).features;
-    const [eventEntities, setEventEntities] = useState<Event[]>([])
     const { current: map } = useMap();
     const [source, setSource] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-
-                const response = await fetch('https://sportify-qa-server.onrender.com/events');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const data = await response.json() as Event[];
-                setEventEntities(data);
-            } catch (err: any) {
-            }
-        };
-        fetchData();
-    }, [])
+    
 
     useEffect(() => {
-        if (eventEntities.length) {
+        if (props.eventEntities.length) {
             const updatedGeojson: FeatureCollection = {
                 type: "FeatureCollection",
-                features: eventEntities.map(e => ({
+                features: props.eventEntities.map(e => ({
                     type: "Feature",
                     geometry: {
                         type: "Point",
@@ -48,7 +37,7 @@ const EntityLoader = () => {
 
             setSource(updatedGeojson);
         }
-    }, [eventEntities]);
+    }, [props.eventEntities]);
 
 
     useEffect(() => {
@@ -67,18 +56,6 @@ const EntityLoader = () => {
             'circle-color': '#007cbf'
         }
     };
-
-
-    const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={() => { }}>
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
 
     return <>
         <Source id="my-data" type="geojson" data={source}>

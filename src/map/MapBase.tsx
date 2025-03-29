@@ -2,19 +2,38 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import mapboxgl from 'maplibre-gl';
+import mapboxgl, { Padding } from 'maplibre-gl';
 import maplibregl from "maplibre-gl";
 import EntityLoader from './EntityLoader';
+import EventCard, { Event } from "../components/EventCard";
+import "./MapBase.css"
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 
 mapboxgl.setRTLTextPlugin(
-    'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js', 
+    'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js',
     true
 );
 
 function MapBase() {
     const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
+    const [eventEntities, setEventEntities] = useState<Event[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const response = await fetch('https://sportify-qa-server.onrender.com/events');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json() as Event[];
+                setEventEntities(data);
+            } catch (err: any) {
+            }
+        };
+        fetchData();
+    }, [])
 
     // Get user location
     useEffect(() => {
@@ -23,7 +42,7 @@ function MapBase() {
                 (position) => {
                     const { latitude, longitude } = position.coords;
                     console.log(({ latitude, longitude }));
-                    
+
                     setUserPosition({ latitude, longitude });
                 },
                 (error) => {
@@ -42,7 +61,13 @@ function MapBase() {
 
     return (
         <div>
-            <div style={{ position: 'absolute', top: 80, left: 10, height: '90%', width: '350px', backgroundColor: 'white', zIndex: 1 }}>
+            <div id="map-side-bar">
+                    {eventEntities.map(i => (<>
+                        <div style={{ padding: 30 }}>
+                            <EventCard {...i} />
+
+                        </div>
+                    </>))}
             </div>
             <Map
                 initialViewState={{
@@ -54,30 +79,15 @@ function MapBase() {
                 mapLib={maplibregl}
                 style={{
                     position: "absolute",
-                    top: "60px",
+                    top: "55px",
                     left: 0,
                     width: "100vw",
-                    height: "calc(100vh - 60px)",
+                    height: "calc(100vh - 55px)",
                     overflow: "hidden"
                 }}
                 mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${mapTilerKey}&language=he&fonts=Roboto,Arial,Open Sans`}
             >
-                <EntityLoader />
-
-                {/* Mark user's position if available */}
-                {userPosition && (
-                    <div
-                        style={{
-                            position: 'absolute',
-                            background: 'red',
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 10
-                        }}
-                    />
-                )}
+                <EntityLoader eventEntities={eventEntities} />
             </Map>
         </div>
     );

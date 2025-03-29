@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: 'white', color: 'black' }} position="absolute">
+    <AppBar sx={{ backgroundColor: 'white', color: 'black', position: 'sticky', zIndex: 1 }} position="static">
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
         <img src="sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 16 }} />
