@@ -1,0 +1,93 @@
+import { useEffect, useState } from "react";
+import { SymbolLayerSpecification, useMap } from "react-map-gl/maplibre";
+import { Event } from "../components/EventCard";
+import { Source, Layer } from 'react-map-gl/maplibre';
+import { type FeatureCollection } from 'geojson';
+
+interface EntityLoaderProps {
+    eventEntities: Event[]
+}
+
+const EntityLoader = (props: EntityLoaderProps) => {
+    const { EventMap } = useMap();
+    const [source, setSource] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
+    const { current: map } = useMap();
+
+    useEffect(() => {
+        if (props.eventEntities.length) {
+            const updatedGeojson: FeatureCollection = {
+                type: "FeatureCollection",
+                features: props.eventEntities.map(e => ({
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [e.location.longitude, e.location.latitude]
+                    },
+                    properties: {
+                        id: e._id,
+                        title: e.address.addressLine1 || "Event Location",
+                        sportIcon: "football-icon" // Assuming category has icon reference
+                    }
+                }))
+            };
+
+            setSource(updatedGeojson);
+        }
+    }, [props.eventEntities]);
+
+    useEffect(() => {
+        if (!map) return;
+
+        const loadImages = async () => {
+            const locationIcon = new Image(40, 40);
+            const sportIcon = new Image(30, 30);
+
+            locationIcon.src = "/location_icon.png";
+            sportIcon.src = "/football.png"; // Sport category icon
+
+            locationIcon.onload = () => {
+                map?.addImage("location-icon", locationIcon);
+            };
+
+            sportIcon.onload = () => {
+                map?.addImage("football-icon", sportIcon);
+            };
+        };
+
+        loadImages();
+    }, [map]);
+
+    const locationLayer : SymbolLayerSpecification = {
+        id: 'event-locations',
+        source: "events-source",
+        type: 'symbol',
+        layout: {
+            'icon-image': 'location-icon',
+            'icon-size': 1,
+            'icon-allow-overlap': true
+        }
+    };
+
+    const sportLayer : SymbolLayerSpecification = {
+        id: 'event-sport-icons',
+        source: "events-source",
+        type: 'symbol',
+        layout: {
+            'icon-image': ['get', 'sportIcon'],
+            'icon-size': 0.7,
+            'icon-allow-overlap': true,
+            'icon-offset': [0, -15]
+        }
+    };
+
+    return <>
+        <Source id="events-source" type="geojson" data={source}>
+            {/* <Layer {...locationLayer} /> */}
+            <Layer {...sportLayer} />
+        </Source>
+
+        <button style={{ position: "absolute", bottom: 100, right: 10 }} onClick={() => map?.flyTo({ center: [-122.4, 37.8] })}>Search in this area</button>
+    </>;
+};
+
+export default EntityLoader;

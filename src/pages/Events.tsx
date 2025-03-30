@@ -45,10 +45,14 @@ function RunningCardContainer() {
   }
 
   return (
-    <Grid container spacing={2} justifyContent="center" style={{ padding: '20px' }}>
+    <Grid container spacing={2} justifyContent="center" style={{ padding: '30px' }}>
       {events.map((event, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
+<<<<<<< Updated upstream
           <EventCard {...event} />
+=======
+          <EventCard onSelect={() => {}} event={event} />
+>>>>>>> Stashed changes
         </Grid>
       ))}
     </Grid>
