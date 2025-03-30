@@ -14,7 +14,7 @@ interface EntityLoaderProps {
 
 const EntityLoader = (props: EntityLoaderProps) => {
     //   const entities = useSelector((state: RootState) => state.entities).features;
-    const { current: map } = useMap();
+    const { EventMap } = useMap();
     const [source, setSource] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
 
     
@@ -30,6 +30,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
                         coordinates: [e.location.longitude, e.location.latitude] // Correct order
                     },
                     properties: {
+                        id: e._id,
                         title: e.address.addressLine1 || "Event Location"
                     }
                 }))
@@ -42,14 +43,14 @@ const EntityLoader = (props: EntityLoaderProps) => {
 
     useEffect(() => {
         let img = new Image(40, 40);
-        img.onload = () => map?.addImage("loacation", img);
+        img.onload = () => EventMap?.addImage("loacation", img);
         // img.src = aircraft; // TODO: add location image 
     }, []);
 
 
     const layerStyle: CircleLayerSpecification = {
-        id: 'point',
-        source: "my-data",
+        id: 'event-locations',
+        source: "events-source",
         type: 'circle',
         paint: {
             'circle-radius': 10,
@@ -58,7 +59,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
     };
 
     return <>
-        <Source id="my-data" type="geojson" data={source}>
+        <Source id="events-source" type="geojson" data={source}>
             <Layer {...layerStyle} />
         </Source>
     </>;

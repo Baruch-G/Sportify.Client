@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, Typography, Grid, Avatar, Rating } from '@mui/material';
-import { DateRange, LocationOn, Timer } from '@mui/icons-material';
+import { DateRange, LocationOn, Timelapse, Timer, AccessTime } from '@mui/icons-material';
 
 interface Address {
     addressLine1: string;
@@ -22,22 +22,49 @@ export interface Event {
     organizer: string;
     address: Address;
     location: Location;
+    date: string;
     __v: number;
 }
 
-const EventCard = (props: Event) => {
+export interface EventProps {
+    event: Event;
+    selected? : string;
+}
+
+const selectedStyle = {
+    boxShadow: "0px 4px 8px rgba(229, 70, 29, 0.2)", // Softer shadow
+    transform: "scale(1.02)",
+    borderLeft: "4px solid #E5461D", // Sleek side border for emphasis
+    transition: "all 0.3s ease-in-out", // Smooth hover effect
+};
+
+const EventCard = (props: EventProps) => {
+
+    useEffect(() => {
+        console.log("Selected Event ID:", props.selected);
+    }, [props.selected]);
+
+    // Compare against both id and _id to be safe
+    const isSelected = props.selected === props.event.id || props.selected === props.event._id;
+
     return (
-        <Card sx={{ display: 'flex', maxWidth: 600, margin: 'auto', boxShadow: 3 }}>
+        <Card style={isSelected ? selectedStyle : {}} sx={{ display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3 }}>
             <CardContent sx={{ flex: '1 0 auto' }}>
                 <Typography component="div" variant="h5">
-                    {"title"}
+                    {"Running"}
                 </Typography>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
                     <Grid item>
                         <DateRange />
                     </Grid>
                     <Grid item>
-                        <Typography variant="body2">{"date"}</Typography>
+                        <Typography variant="body2">{new Date(props.event.date).toDateString()}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <AccessTime />
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="body2">{new Date(props.event.date).toLocaleTimeString()}</Typography>
                     </Grid>
                 </Grid>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
@@ -45,7 +72,7 @@ const EventCard = (props: Event) => {
                         <LocationOn />
                     </Grid>
                     <Grid item>
-                        <Typography variant="body2">{props.address.addressLine1}</Typography>
+                        <Typography variant="body2">{`${props.event.address.addressLine1}, ${props.event.address.addressLine2 ? props.event.address.addressLine2 + " ," : ""} ${props.event.address.city}.`}</Typography>
                     </Grid>
                 </Grid>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
@@ -53,7 +80,7 @@ const EventCard = (props: Event) => {
                         <Timer />
                     </Grid>
                     <Grid item>
-                        <Typography variant="body2">{`${props.duration}h`}</Typography>
+                        <Typography variant="body2">{`${props.event.duration}h`}</Typography>
                     </Grid>
                 </Grid>
                 <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
@@ -65,11 +92,6 @@ const EventCard = (props: Event) => {
                     </Grid>
                 </Grid>
             </CardContent>
-            <img
-                src={"https://static01.nyt.com/images/2022/08/29/multimedia/WNT-GRAVEL-BIKING1/WNT-GRAVEL-BIKING1-mediumSquareAt3X.jpg"}
-                alt="Running"
-                style={{ width: 200, height: 'auto', objectFit: 'cover' }}
-            />
         </Card>
     );
 };
