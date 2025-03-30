@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, Avatar, Rating } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Avatar, Rating, CardActionArea } from '@mui/material';
 import { DateRange, LocationOn, Timelapse, Timer, AccessTime } from '@mui/icons-material';
 
 interface Address {
@@ -28,7 +28,8 @@ export interface Event {
 
 export interface EventProps {
     event: Event;
-    selected? : string;
+    selected?: string;
+    onSelect: () => void;
 }
 
 const selectedStyle = {
@@ -48,50 +49,68 @@ const EventCard = (props: EventProps) => {
     const isSelected = props.selected === props.event.id || props.selected === props.event._id;
 
     return (
-        <Card style={isSelected ? selectedStyle : {}} sx={{ display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3 }}>
-            <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography component="div" variant="h5">
-                    {"Running"}
-                </Typography>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <DateRange />
+        <Card style={isSelected ? selectedStyle : {}}
+            sx={{
+                display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
+                    cursor: "pointer"
+                },
+            }}>          <CardActionArea onClick={props.onSelect}>
+                <CardContent sx={{ flex: '1 0 auto' }}>
+                    <Typography component="div" variant="h5">
+                        {"Running"}
+                    </Typography>
+                    <Grid container spacing={2} columns={2}>
+                        <Grid item xs={1.1}>
+                            <Grid container alignItems="center" wrap="nowrap">
+                                <DateRange style={{ color: "#E5461D" }} />
+                                <Typography
+                                    variant="body2"
+                                    noWrap
+                                    sx={{ ml: 1, flexGrow: 1, minWidth: 0 }}
+                                >
+                                    {new Date(props.event.date).toDateString()}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={0.9}>
+                            <Grid container alignItems="center" wrap="nowrap">
+                                <AccessTime style={{ color: "#E5461D" }} />
+                                <Typography
+                                    variant="body2"
+                                    noWrap
+                                    sx={{ ml: 1, flexGrow: 1, minWidth: 0 }}
+                                >
+                                    {new Date(props.event.date).toLocaleTimeString()}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={1.1}>
+                            <Grid container alignItems="center" wrap="nowrap">
+                                <LocationOn style={{ color: "#E5461D" }} />
+                                <Typography
+                                    variant="body2"
+                                    noWrap
+                                    sx={{ ml: 1, flexGrow: 1, minWidth: 0 }}
+                                >
+                                    {props.event.address.city}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={0.9}>
+                            <Grid container alignItems="center" wrap="nowrap">
+                                <Timer style={{ color: "#E5461D" }} />
+                                <Typography
+                                    variant="body2"
+                                    noWrap
+                                    sx={{ ml: 1, flexGrow: 1, minWidth: 0 }}
+                                >
+                                    {`${props.event.duration}h`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{new Date(props.event.date).toDateString()}</Typography>
-                    </Grid>
-                    <Grid item>
-                        <AccessTime />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{new Date(props.event.date).toLocaleTimeString()}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <LocationOn />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{`${props.event.address.addressLine1}, ${props.event.address.addressLine2 ? props.event.address.addressLine2 + " ," : ""} ${props.event.address.city}.`}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <Timer />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{`${props.event.duration}h`}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
-                    <Grid item>
-                        <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
-                    </Grid>
-                    <Grid item>
-                        <Rating name="read-only" value={1} readOnly />
-                    </Grid>
-                </Grid>
-            </CardContent>
+                </CardContent>
+            </CardActionArea>
         </Card>
     );
 };

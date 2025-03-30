@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { useMap } from "react-map-gl/maplibre";
+import { SymbolLayerSpecification, useMap } from "react-map-gl/maplibre";
 // import aircraft from "./assets/aircraft.svg";
 // import { sources } from "./map/sources/source";
 import { Event } from "../components/EventCard";
 // import Events from "./map/Events";
-import Map, { Source, Layer, CircleLayerSpecification } from 'react-map-gl/maplibre';
-import { Geometry, Point, type FeatureCollection, type GeoJsonProperties } from 'geojson';
+import { Source, Layer } from 'react-map-gl/maplibre';
+import { type FeatureCollection } from 'geojson';
 import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 
 interface EntityLoaderProps {
-    eventEntities : Event[]
+    eventEntities: Event[]
 }
 
 const EntityLoader = (props: EntityLoaderProps) => {
     //   const entities = useSelector((state: RootState) => state.entities).features;
     const { EventMap } = useMap();
     const [source, setSource] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
-
+    const { current: map } = useMap();
     
 
     useEffect(() => {
@@ -27,11 +27,12 @@ const EntityLoader = (props: EntityLoaderProps) => {
                     type: "Feature",
                     geometry: {
                         type: "Point",
-                        coordinates: [e.location.longitude, e.location.latitude] // Correct order
+                        coordinates: [e.location.longitude, e.location.latitude]
                     },
                     properties: {
                         id: e._id,
-                        title: e.address.addressLine1 || "Event Location"
+                        title: e.address.addressLine1 || "Event Location",
+                        sportIcon: "football-icon" // Assuming category has icon reference
                     }
                 }))
             };
@@ -40,28 +41,58 @@ const EntityLoader = (props: EntityLoaderProps) => {
         }
     }, [props.eventEntities]);
 
-
     useEffect(() => {
-        let img = new Image(40, 40);
-        img.onload = () => EventMap?.addImage("loacation", img);
-        // img.src = aircraft; // TODO: add location image 
-    }, []);
+        if (!map) return;
 
+        const loadImages = async () => {
+            const locationIcon = new Image(40, 40);
+            const sportIcon = new Image(30, 30);
 
-    const layerStyle: CircleLayerSpecification = {
+            locationIcon.src = "/location_icon.png";
+            sportIcon.src = "/football.png"; // Sport category icon
+
+            locationIcon.onload = () => {
+                map?.addImage("location-icon", locationIcon);
+            };
+
+            sportIcon.onload = () => {
+                map?.addImage("football-icon", sportIcon);
+            };
+        };
+
+        loadImages();
+    }, [map]);
+
+    const locationLayer : SymbolLayerSpecification = {
         id: 'event-locations',
         source: "events-source",
-        type: 'circle',
-        paint: {
-            'circle-radius': 10,
-            'circle-color': '#007cbf'
+        type: 'symbol',
+        layout: {
+            'icon-image': 'location-icon',
+            'icon-size': 1,
+            'icon-allow-overlap': true
+        }
+    };
+
+    const sportLayer : SymbolLayerSpecification = {
+        id: 'event-sport-icons',
+        source: "events-source",
+        type: 'symbol',
+        layout: {
+            'icon-image': ['get', 'sportIcon'],
+            'icon-size': 0.7,
+            'icon-allow-overlap': true,
+            'icon-offset': [0, -15]
         }
     };
 
     return <>
         <Source id="events-source" type="geojson" data={source}>
-            <Layer {...layerStyle} />
+            {/* <Layer {...locationLayer} /> */}
+            <Layer {...sportLayer} />
         </Source>
+
+        <button style={{ position: "absolute", bottom: 100, right: 10 }} onClick={() => map?.flyTo({ center: [-122.4, 37.8] })}>Search in this area</button>
     </>;
 };
 
