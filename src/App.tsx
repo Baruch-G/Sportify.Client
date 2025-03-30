@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Events from './pages/Events'
 import MapBase from './map/MapBase'
 import StepperSignIn from './components/Register'
+import EventDetails from './components/EventData'
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
         <Route path="/map" element={<MapBase />} />
         <Route path="/coaches" element={<div >coaches</div>} />
         <Route path="/register" element={<StepperSignIn />} />
-
+        <Route path="/events/:eventId" element={<EventDetails  />} />
       </Routes>
     </>
   )

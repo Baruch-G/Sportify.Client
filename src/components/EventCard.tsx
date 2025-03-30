@@ -28,7 +28,7 @@ export interface Event {
 
 export interface EventProps {
     event: Event;
-    selected? : string;
+    selected?: string;
     onSelect: () => void;
 }
 
@@ -50,11 +50,11 @@ const EventCard = (props: EventProps) => {
 
     return (
         <Card style={isSelected ? selectedStyle : {}}
-        sx={{
-            display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
-                cursor: "pointer"
-            },
-        }}>          <CardActionArea onClick={props.onSelect}>
+            sx={{
+                display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
+                    cursor: "pointer"
+                },
+            }}>          <CardActionArea onClick={props.onSelect}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography component="div" variant="h5">
                         {"Running"}
@@ -62,7 +62,7 @@ const EventCard = (props: EventProps) => {
                     <Grid container spacing={2} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <DateRange />
+                                <DateRange style={{ color: "#E5461D" }} />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -74,7 +74,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <AccessTime />
+                                <AccessTime style={{ color: "#E5461D" }} />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -86,7 +86,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <LocationOn />
+                                <LocationOn style={{ color: "#E5461D" }} />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -98,7 +98,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <Timer />
+                                <Timer style={{ color: "#E5461D" }} />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -109,16 +109,6 @@ const EventCard = (props: EventProps) => {
                             </Grid>
                         </Grid>
                     </Grid>
-
-
-                    {/* <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
-                        <Grid item>
-                            <Avatar alt="User Avatar" src="/avatar.jfif" />
-                        </Grid>
-                        <Grid item>
-                            <Rating name="read-only" value={1} readOnly />
-                        </Grid>
-                    </Grid> */}
                 </CardContent>
             </CardActionArea>
         </Card>
