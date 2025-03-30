@@ -1,12 +1,6 @@
-<<<<<<< Updated upstream
-import React from 'react';
-import { Card, CardContent, Typography, Grid, Avatar, Rating } from '@mui/material';
-import { DateRange, LocationOn, People } from '@mui/icons-material';
-=======
 import React, { useEffect } from 'react';
 import { Card, CardContent, Typography, Grid, Avatar, Rating, CardActionArea } from '@mui/material';
 import { DateRange, LocationOn, Timelapse, Timer, AccessTime } from '@mui/icons-material';
->>>>>>> Stashed changes
 
 interface Address {
     addressLine1: string;
@@ -28,70 +22,25 @@ export interface Event {
     organizer: string;
     address: Address;
     location: Location;
+    date: string;
     __v: number;
 }
 
-<<<<<<< Updated upstream
-const EventCard = (props: Event) => {
-    return (
-        <Card sx={{ display: 'flex', maxWidth: 600, margin: 'auto', boxShadow: 3 }}>
-            <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography component="div" variant="h5">
-                    {"title"}
-                </Typography>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <DateRange />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{"date"}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <LocationOn />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">{props.address.addressLine1}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                    <Grid item>
-                        <People />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="body2">Group</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
-                    <Grid item>
-                        <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" />
-                    </Grid>
-                    <Grid item>
-                        <Rating name="read-only" value={1} readOnly />
-                    </Grid>
-                </Grid>
-            </CardContent>
-            <img
-                src={"https://static01.nyt.com/images/2022/08/29/multimedia/WNT-GRAVEL-BIKING1/WNT-GRAVEL-BIKING1-mediumSquareAt3X.jpg"}
-                alt="Running"
-                style={{ width: 200, height: 'auto', objectFit: 'cover' }}
-            />
-=======
 export interface EventProps {
     event: Event;
-    selected?: string;
-    onSelect: () => void
+    selected? : string;
+    onSelect: () => void;
 }
 
 const selectedStyle = {
-    // boxShadow : "0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(229, 70, 29, 0.2)",
+    boxShadow: "0px 4px 8px rgba(229, 70, 29, 0.2)", // Softer shadow
     transform: "scale(1.02)",
     borderLeft: "4px solid #E5461D", // Sleek side border for emphasis
     transition: "all 0.3s ease-in-out", // Smooth hover effect
 };
 
 const EventCard = (props: EventProps) => {
+
     useEffect(() => {
         console.log("Selected Event ID:", props.selected);
     }, [props.selected]);
@@ -101,12 +50,11 @@ const EventCard = (props: EventProps) => {
 
     return (
         <Card style={isSelected ? selectedStyle : {}}
-            sx={{
-                display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
-                    cursor: "pointer"
-                },
-            }}>
-            <CardActionArea onClick={props.onSelect}>
+        sx={{
+            display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
+                cursor: "pointer"
+            },
+        }}>          <CardActionArea onClick={props.onSelect}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography component="div" variant="h5">
                         {"Running"}
@@ -173,7 +121,6 @@ const EventCard = (props: EventProps) => {
                     </Grid> */}
                 </CardContent>
             </CardActionArea>
->>>>>>> Stashed changes
         </Card>
     );
 };

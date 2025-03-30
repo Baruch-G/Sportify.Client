@@ -1,40 +1,20 @@
 import * as React from 'react';
-<<<<<<< Updated upstream
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-=======
 import { useState, useEffect, useRef } from 'react';
-import { Map, MapRef, useMap } from 'react-map-gl/maplibre';
+import { MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import mapboxgl, { MapLayerMouseEvent } from 'maplibre-gl';
+import { MapLayerMouseEvent } from 'maplibre-gl';
 import EntityLoader from './EntityLoader';
-import EventCard, { Event } from "../components/EventCard";
+import { Event } from "../components/EventCard";
 import "./MapBase.css";
 import MapSideBar from '../components/MapSideBar';
->>>>>>> Stashed changes
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
+const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
 function MapBase() {
-<<<<<<< Updated upstream
-    return (
-        <Map
-            initialViewState={{
-                longitude: 34.88796,
-                latitude: 32.076701,
-                zoom: 14
-            }}
-            style={{
-                position: "absolute",
-                top: "60px",
-                left: 0,
-                width: "100vw",
-                height: "calc(100vh - 60px)",
-                overflow: "hidden"
-            }}
-            mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${mapTilerKey}`}
-            />
-=======
+
     const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
     const [eventEntities, setEventEntities] = useState<Event[]>([]);
     const [selectedEvent, setSelectedEvent] = useState<string>();
@@ -45,9 +25,7 @@ function MapBase() {
 
     const setSelectFeature = (e: MapLayerMouseEvent) => {
         const map = mapRef.current?.getMap();
-        const features = map?.queryRenderedFeatures(e.point, {
-            
-        });
+        const features = map?.queryRenderedFeatures(e.point);
 
         if (features?.length && features[0]?.properties.id) {
             setSelectedEvent(features[0]?.properties.id);
@@ -130,7 +108,6 @@ function MapBase() {
                 <EntityLoader eventEntities={eventEntities} />
             </Map>
         </div>
->>>>>>> Stashed changes
     );
 }
 
