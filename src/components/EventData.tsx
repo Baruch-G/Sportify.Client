@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Divider } from '@mui/material';
-import { LocationOn, AccessTime, FitnessCenter, Person, Place } from '@mui/icons-material';
 import { Event } from './EventCard';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
@@ -70,34 +69,27 @@ function EventDetails() {
 
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Typography variant="subtitle1">
-              <Place style={{ color: '#E5461D'}}/> Address:
-            </Typography>
-            <Typography>
-              {event.address.addressLine1}
-              {event.address.addressLine2 && `, ${event.address.addressLine2}`}
-              {`, ${event.address.city}, ${event.address.country}`}
-            </Typography>
+            <Typography variant="subtitle1" display="inline">Address: </Typography>
+            <Typography display="inline">{event.address.addressLine1}{event.address.addressLine2 && `, ${event.address.addressLine2}`}, {event.address.city}, {event.address.country}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="subtitle1" >
-              <AccessTime /> Duration:
-            </Typography>
-            <Typography>{event.duration} hours</Typography>
+            <Typography variant="subtitle1" display="inline">Duration: </Typography>
+            <Typography display="inline">{event.duration} hours</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Typography variant="subtitle1" >
-              <FitnessCenter /> Difficulty Level:
-            </Typography>
-            <Typography>{event.difficultyLevel}</Typography>
+            <Typography variant="subtitle1" display="inline">Difficulty Level: </Typography>
+            <Typography display="inline">{event.difficultyLevel}</Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <Typography variant="subtitle1" display="inline">Category: </Typography>
+            <Typography display="inline">{"Running"}</Typography>
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="subtitle1" >
-              <Person /> Organizer:
-            </Typography>
-            <Typography>{event.organizer}</Typography>
+            <Typography variant="subtitle1" display="inline">Organizer: </Typography>
+            <Typography display="inline">{event.organizer}</Typography>
           </Grid>
         </Grid>
       </CardContent>
