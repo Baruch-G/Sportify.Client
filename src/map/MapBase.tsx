@@ -9,13 +9,13 @@ import EntityLoader from './EntityLoader';
 import { Event } from "../components/EventCard";
 import "./MapBase.css";
 import MapSideBar from '../components/MapSideBar';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'maplibre-gl';
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
 mapboxgl.setRTLTextPlugin(
-    'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js', () => {},
+    'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js',
     true
 );
 

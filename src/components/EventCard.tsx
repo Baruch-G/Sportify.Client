@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, Avatar, Rating, CardActionArea } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Avatar, Rating, CardActionArea, Button } from '@mui/material';
 import { DateRange, LocationOn, Timelapse, Timer, AccessTime } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 interface Address {
     addressLine1: string;
@@ -56,10 +57,10 @@ const EventCard = (props: EventProps) => {
                 },
             }}>          <CardActionArea onClick={props.onSelect}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
-                    <Typography component="div" variant="h5">
+                    <Typography component="div" variant="h5" style={{ marginBottom: '10px' }}>
                         {"Running"}
                     </Typography>
-                    <Grid container spacing={2} columns={2}>
+                    <Grid container spacing={3} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
                                 <DateRange style={{ color: "#E5461D" }} />
@@ -109,6 +110,11 @@ const EventCard = (props: EventProps) => {
                             </Grid>
                         </Grid>
                     </Grid>
+                    {isSelected && (
+                        <Typography variant="body2" sx={{ mt: 2 }}>
+                            <Link to={`/events/${props.event.id}`} style={{ color: "#E5461D", fontWeight: "bold" }}>Register</Link>
+                        </Typography>
+                    )}
                 </CardContent>
             </CardActionArea>
         </Card>
