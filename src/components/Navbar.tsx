@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface NavItem {
   title: string;
@@ -13,7 +13,8 @@ interface NavItem {
 }
 
 const navPages: NavItem[] = [
-  { icon: AccountCircle, path: '/', title: 'Events' },
+  { icon: AccountCircle, path: '/', title: 'Home' },
+  { icon: AccountCircle, path: '/events', title: 'Events' },
   { icon: AccountCircle, path: '/calendar', title: 'Calendar' },
   { icon: AccountCircle, path: '/map', title: 'Map View' },
   { icon: AccountCircle, path: '/coaches', title: 'Coaches' },
@@ -23,6 +24,7 @@ const Navbar: React.FC = () => {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -42,11 +44,13 @@ const Navbar: React.FC = () => {
     setMobileMenuAnchor(null);
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <AppBar sx={{ backgroundColor: 'white', color: 'black', position: 'sticky', zIndex: 1 }} position="static">
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
-        <img src="sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 16 }} />
+        <img src="/sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 16 }} />
 
         {isMobile ? (
           // Mobile Menu
@@ -62,6 +66,7 @@ const Navbar: React.FC = () => {
                     navigate(item.path);
                     handleMobileMenuClose();
                   }}
+                  sx={{ color: isActive(item.path) ? '#E5461D' : 'inherit', fontWeight : isActive(item.path) ? "bold": "unset" }}
                 >
                   {item.title}
                 </MenuItem>
@@ -74,7 +79,12 @@ const Navbar: React.FC = () => {
             {navPages.map((item, index) => (
               <Typography
                 key={index}
-                sx={{ color: 'gray', cursor: 'pointer', '&:hover': { color: 'black' } }}
+                sx={{
+                  color: isActive(item.path) ? '#E5461D' : 'gray',
+                  fontWeight : isActive(item.path) ? "bold": "unset"   ,
+                  cursor: 'pointer',
+                  '&:hover': { color: 'black' },
+                }}
                 onClick={() => navigate(item.path)}
               >
                 {item.title}
