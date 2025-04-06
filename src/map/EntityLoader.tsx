@@ -30,7 +30,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
                         coordinates: [e.location.longitude, e.location.latitude]
                     },
                     properties: {
-                        id: e._id,
+                        id: e.id,
                         title: e.address.addressLine1 || "Event Location",
                         sportIcon: "football-icon" // Assuming category has icon reference
                     }
