@@ -77,6 +77,7 @@ const Home = () => {
                             px: 4,
                             py: 1.5,
                             fontSize: '1rem',
+                            borderRadius: 30,   
                             transition: 'transform 0.2s',
                             '&:hover': {
                                 transform: 'translateY(-2px)',

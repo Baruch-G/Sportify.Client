@@ -62,7 +62,7 @@ const EventCard = (props: EventProps) => {
                     <Grid container spacing={3} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <DateRange color="primary" />
+                                <DateRange  />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -74,7 +74,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <AccessTime color="primary" />
+                                <AccessTime  />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -86,7 +86,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <LocationOn color="primary" />
+                                <LocationOn  />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -98,7 +98,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <Timer color="primary" />
+                                <Timer  />
                                 <Typography
                                     variant="body2"
                                     noWrap
