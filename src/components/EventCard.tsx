@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, Avatar, Rating, CardActionArea, Button } from '@mui/material';
-import { DateRange, LocationOn, Timelapse, Timer, AccessTime } from '@mui/icons-material';
+import { useEffect } from 'react';
+import { Card, CardContent, Typography, Grid, CardActionArea } from '@mui/material';
+import { DateRange, LocationOn, Timer, AccessTime } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 interface Address {
@@ -16,7 +16,6 @@ interface Location {
 }
 
 export interface Event {
-    _id: string;
     id: string;
     duration: number;
     difficultyLevel: number;
@@ -46,8 +45,8 @@ const EventCard = (props: EventProps) => {
         console.log("Selected Event ID:", props.selected);
     }, [props.selected]);
 
-    // Compare against both id and _id to be safe
-    const isSelected = props.selected === props.event.id || props.selected === props.event._id;
+    // Compare against both id and id to be safe
+    const isSelected = props.selected === props.event.id || props.selected === props.event.id;
 
     return (
         <Card style={isSelected ? selectedStyle : {}}
@@ -63,7 +62,7 @@ const EventCard = (props: EventProps) => {
                     <Grid container spacing={3} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <DateRange style={{ color: "#E5461D" }} />
+                                <DateRange color="primary" />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -75,7 +74,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <AccessTime style={{ color: "#E5461D" }} />
+                                <AccessTime color="primary" />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -87,7 +86,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <LocationOn style={{ color: "#E5461D" }} />
+                                <LocationOn color="primary" />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -99,7 +98,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <Timer style={{ color: "#E5461D" }} />
+                                <Timer color="primary" />
                                 <Typography
                                     variant="body2"
                                     noWrap

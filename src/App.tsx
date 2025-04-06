@@ -6,11 +6,13 @@ import MapBase from './map/MapBase'
 import StepperSignIn from './components/Register'
 import EventDetails from './components/EventData'
 import Home from './pages/Home'
+import { ThemeProvider } from '@emotion/react'
+import theme from './theme/Theme'
 
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -21,7 +23,7 @@ function App() {
         <Route path="/register" element={<StepperSignIn />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
       </Routes>
-    </>
+    </ThemeProvider>
   )
 }
 

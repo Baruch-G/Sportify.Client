@@ -37,7 +37,7 @@ function MapBase() {
             setSelectedEvent(features[0]?.properties.id);
 
             // Scroll to the selected event
-            const index = eventEntities.findIndex(event => event.id === features[0]?.properties.id || event._id === features[0]?.properties.id);
+            const index = eventEntities.findIndex(event => event.id === features[0]?.properties.id || event.id === features[0]?.properties.id);
             eventRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     };
