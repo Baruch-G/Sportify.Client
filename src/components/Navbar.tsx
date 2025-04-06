@@ -1,10 +1,10 @@
 import React, { useState, MouseEvent } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Avatar, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Avatar, Box, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 interface NavItem {
   title: string;
@@ -48,40 +48,27 @@ const Navbar: React.FC = () => {
 
   return (
     <AppBar sx={{ backgroundColor: 'white', color: 'black', position: 'sticky', zIndex: 1 }} position="static">
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
-        {/* Logo */}
-        <img src="/sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 16 }} />
+      <Toolbar sx={{ justifyContent: 'space-between', px: 2 }}>
+        {/* Left section: Logo + Burger icon (on mobile) */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 8 }} />
 
-        {isMobile ? (
-          // Mobile Menu
-          <>
-            <IconButton edge="start" color="inherit" onClick={handleMobileMenuClick}>
+          {isMobile && (
+            <IconButton edge="end" color="inherit" onClick={handleMobileMenuClick}>
               <MenuIcon />
             </IconButton>
-            <Menu anchorEl={mobileMenuAnchor} open={Boolean(mobileMenuAnchor)} onClose={handleMobileMenuClose}>
-              {navPages.map((item, index) => (
-                <MenuItem
-                  key={index}
-                  onClick={() => {
-                    navigate(item.path);
-                    handleMobileMenuClose();
-                  }}
-                  sx={{ color: isActive(item.path) ? '#E5461D' : 'inherit', fontWeight : isActive(item.path) ? "bold": "unset" }}
-                >
-                  {item.title}
-                </MenuItem>
-              ))}
-            </Menu>
-          </>
-        ) : (
-          // Desktop Menu
+          )}
+        </Box>
+
+        {/* Center section: Navigation links (desktop only) */}
+        {!isMobile && (
           <Box sx={{ display: 'flex', gap: '20px', flexGrow: 1 }}>
             {navPages.map((item, index) => (
               <Typography
                 key={index}
                 sx={{
                   color: isActive(item.path) ? '#E5461D' : 'gray',
-                  fontWeight : isActive(item.path) ? "bold": "unset"   ,
+                  fontWeight: isActive(item.path) ? 'bold' : 'unset',
                   cursor: 'pointer',
                   '&:hover': { color: 'black' },
                 }}
@@ -93,15 +80,41 @@ const Navbar: React.FC = () => {
           </Box>
         )}
 
-        {/* User Avatar/Menu */}
-        <IconButton sx={{ marginLeft: 'auto' }} onClick={handleAvatarClick}>
-          <Avatar alt="User Avatar" src="/avatar.jfif" />
-        </IconButton>
-        <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+        {/* Right section: Avatar or Login/Signup */}
+        {false ? (
+          <>
+            <IconButton sx={{ marginLeft: 'auto' }} onClick={handleAvatarClick}>
+              <Avatar alt="User Avatar" src="/avatar.jfif" />
+            </IconButton>
+            <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+              <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Link to="/register"><Button size='small' style={{padding: "3px 13px 3px 13px", borderRadius: 5}} color="primary" variant="outlined">LOGIN</Button></Link>
+            <Link to="/register"><Button size='small' style={{padding: "3px 13px 3px 13px", borderRadius: 5}} color="primary" variant="contained">SIGN UP</Button></Link>
+          </Box>
+        )}
+
+        {/* Mobile menu */}
+        <Menu anchorEl={mobileMenuAnchor} open={Boolean(mobileMenuAnchor)} onClose={handleMobileMenuClose}>
+          {navPages.map((item, index) => (
+            <MenuItem
+              key={index}
+              onClick={() => {
+                navigate(item.path);
+                handleMobileMenuClose();
+              }}
+              sx={{ color: isActive(item.path) ? '#E5461D' : 'inherit', fontWeight: isActive(item.path) ? 'bold' : 'unset' }}
+            >
+              {item.title}
+            </MenuItem>
+          ))}
         </Menu>
       </Toolbar>
+
     </AppBar>
   );
 };
