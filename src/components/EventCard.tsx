@@ -54,7 +54,8 @@ const EventCard = (props: EventProps) => {
                 display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
                     cursor: "pointer"
                 },
-            }}>          <CardActionArea onClick={props.onSelect}>
+            }}>
+                <CardActionArea onClick={props.onSelect}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography component="div" variant="h5" style={{ marginBottom: '10px' }}>
                         {"Running"}
@@ -62,7 +63,7 @@ const EventCard = (props: EventProps) => {
                     <Grid container spacing={3} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <DateRange  />
+                                <DateRange />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -74,7 +75,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <AccessTime  />
+                                <AccessTime />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -86,7 +87,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <LocationOn  />
+                                <LocationOn />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -98,7 +99,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <Timer  />
+                                <Timer />
                                 <Typography
                                     variant="body2"
                                     noWrap

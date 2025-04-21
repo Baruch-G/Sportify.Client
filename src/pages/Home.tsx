@@ -1,7 +1,16 @@
 import React from 'react'
 import "./Home.css"
-import { Box, Container, Typography, Button } from '@mui/material';
+import { Box, Container, Typography, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import HomeCategoryList from '../components/HomeCategoryList';
+import CheckCircleIcon from '@mui/icons-material/Check';
+import { Link } from 'react-router-dom';
+
+const features = [
+    "Discover Events Nearby",
+    "Easy Event Registration",
+    "Interactive Map View",
+    "Track Your Calendar",
+];
 
 const Home = () => {
     return (
@@ -69,6 +78,7 @@ const Home = () => {
                         Join sports events that match your passion and skill level
                     </Typography>
 
+                    <Link to={"/events"}>
                     <Button
                         variant="contained"
                         color="primary"
@@ -77,7 +87,7 @@ const Home = () => {
                             px: 4,
                             py: 1.5,
                             fontSize: '1rem',
-                            borderRadius: 30,   
+                            borderRadius: 30,
                             transition: 'transform 0.2s',
                             '&:hover': {
                                 transform: 'translateY(-2px)',
@@ -85,10 +95,24 @@ const Home = () => {
                         }}
                     >
                         FIND EVENTS
-                    </Button>
+                    </Button></Link>
                 </Container>
 
             </Box>
+
+            {/* <List>
+                {features.map((feature, index) => (
+                    <ListItem key={index}>
+                        <ListItemIcon>
+                            <CheckCircleIcon color="primary" />
+                        </ListItemIcon>
+                        <ListItemText primary={feature} />
+                    </ListItem>
+                ))}
+            </List> */}
+
+
+
             <HomeCategoryList />
         </div>
     );

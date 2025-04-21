@@ -32,7 +32,7 @@ const CategoryHomeCard = (props: CategoryHomeCardProps) => {
                     alt={props.sportKind.name}
                     sx={{ borderRadius: '12px' }} // <- Rounded corners just for image
                 />
-                <CardContent>
+                <CardContent sx={{ padding: 0, paddingTop: "16px" }}>
                     <Typography gutterBottom variant="h5" component="div">
                         {props.sportKind.name}
                     </Typography>

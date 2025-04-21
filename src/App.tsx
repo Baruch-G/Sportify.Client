@@ -8,6 +8,7 @@ import EventDetails from './components/EventData'
 import Home from './pages/Home'
 import { ThemeProvider } from '@emotion/react'
 import theme from './theme/Theme'
+import AddEvent from './components/AddEvent'
 
 
 function App() {
@@ -16,12 +17,13 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
         <Route path="/calendar" element={<div />} />
         <Route path="/map" element={<MapBase />} />
         <Route path="/coaches" element={<div >coaches</div>} />
         <Route path="/register" element={<StepperSignIn />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/add" element={<AddEvent />} />
       </Routes>
     </ThemeProvider>
   )
