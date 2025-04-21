@@ -1,0 +1,78 @@
+[
+    {
+        "address": {
+            "addressLine1": "123 Green Hill",
+            "addressLine2": "Suite 5B",
+            "city": "Tel Aviv",
+            "country": "Israel"
+        },
+        "location": {
+            "longitude": 34.7818,
+            "latitude": 32.0853
+        },
+        "_id": "67f929c040616fd494adb686",
+        "id": "d3e6f9a4-9f6a-437a-a1e1-b2b34738f3b7",
+        "duration": 2,
+        "difficultyLevel": 2,
+        "organizer": "f25f999b-89d4-41e3-a9e0-e3b2e235dce4",
+        "date": "2025-04-20T10:30:00.000Z",
+        "category": "Outdoor"
+    },
+    {
+        "address": {
+            "addressLine1": "456 Blue Street",
+            "addressLine2": "Apt 12C",
+            "city": "Haifa",
+            "country": "Israel"
+        },
+        "location": {
+            "longitude": 34.9896,
+            "latitude": 32.7940
+        },
+        "_id": "67f929c040616fd494adb687",
+        "id": "a1e2f9b4-8f7a-437a-b2e1-c3d45738f4c8",
+        "duration": 3,
+        "difficultyLevel": 3,
+        "organizer": "e35f888b-78d3-41e3-b9e0-d3c2e235dce5",
+        "date": "2025-05-15T14:00:00.000Z",
+        "category": "Indoor"
+    },
+    {
+        "address": {
+            "addressLine1": "789 Red Avenue",
+            "addressLine2": "Floor 3",
+            "city": "Jerusalem",
+            "country": "Israel"
+        },
+        "location": {
+            "longitude": 35.2137,
+            "latitude": 31.7683
+        },
+        "_id": "67f929c040616fd494adb688",
+        "id": "c2f3g9c5-7g8b-437a-c3f2-d4e56738f5d9",
+        "duration": 1,
+        "difficultyLevel": 1,
+        "organizer": "g45f777b-67c2-41e3-c8e0-f4d3e235dce6",
+        "date": "2025-06-10T09:00:00.000Z",
+        "category": "Fitness"
+    },
+    {
+        "address": {
+            "addressLine1": "321 Yellow Lane",
+            "addressLine2": "Office 101",
+            "city": "Eilat",
+            "country": "Israel"
+        },
+        "location": {
+            "longitude": 34.9482,
+            "latitude": 29.5581
+        },
+        "_id": "67f929c040616fd494adb689",
+        "id": "d3g4h9d6-6h9c-437a-d4g3-e5f67838f6e0",
+        "duration": 4,
+        "difficultyLevel": 4,
+        "organizer": "h55f666b-56b1-41e3-d9e0-g5e4e235dce7",
+        "date": "2025-07-05T16:00:00.000Z",
+        "category": "Adventure"
+    }
+]
