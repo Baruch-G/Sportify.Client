@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Divider } from '@mui/material';
-import { Event } from './EventCard';
+import { Event } from '../models/Event';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 

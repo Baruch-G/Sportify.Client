@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Event } from '../components/EventCard';
+import { Event } from '../models/Event';
 
 const getEvents = async () => {
     try {

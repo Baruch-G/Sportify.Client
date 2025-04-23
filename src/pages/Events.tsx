@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, CircularProgress, Typography } from '@mui/material';
-import EventCard, { Event } from '../components/EventCard';
+import { Event } from '../models/Event';
+import EventCard from '../components/EventCard';
 import { useNavigate } from 'react-router-dom';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
@@ -51,7 +52,7 @@ function EventList() {
     <Grid container spacing={2} justifyContent="center" style={{ padding: '30px' }}>
       {events.map((event, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
-          <EventCard onSelect={() => navigate(`/events/${event.id}`)} event={event} />
+          <EventCard onSelect={() => navigate(`/events/${event._id}`)} event={event} />
         </Grid>
       ))}
     </Grid>
