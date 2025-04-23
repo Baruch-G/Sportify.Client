@@ -5,7 +5,7 @@ import { enUS } from 'date-fns/locale/en-US'
 import './Calendar.css'
 import { useEffect, useState } from 'react'
 import getEvents from '../../api/EventsApi'
-import { Event } from '../../components/EventCard'
+import { Event } from '../../models/Event'
 
 const locales = {
   'en-US': enUS

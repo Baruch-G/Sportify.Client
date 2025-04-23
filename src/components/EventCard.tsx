@@ -2,30 +2,7 @@ import { useEffect } from 'react';
 import { Card, CardContent, Typography, Grid, CardActionArea } from '@mui/material';
 import { DateRange, LocationOn, Timer, AccessTime } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-
-interface Address {
-    addressLine1: string;
-    addressLine2?: string;
-    city: string;
-    country: string;
-}
-
-interface Location {
-    longitude: number;
-    latitude: number;
-}
-
-export interface Event {
-    id: string;
-    duration: number;
-    difficultyLevel: number;
-    organizer: string;
-    address: Address;
-    location: Location;
-    date: string;
-    __v: number;
-}
-
+import { Event } from '../models/Event';
 export interface EventProps {
     event: Event;
     selected?: string;
@@ -46,23 +23,24 @@ const EventCard = (props: EventProps) => {
     }, [props.selected]);
 
     // Compare against both id and id to be safe
-    const isSelected = props.selected === props.event.id || props.selected === props.event.id;
+    const isSelected = props.selected === props.event._id;
 
     return (
         <Card style={isSelected ? selectedStyle : {}}
             sx={{
-                display: 'flex', maxWidth: 500, margin: 'auto', boxShadow: 3, ':hover': {
+                display: 'flex', maxWidth: 500, margin: 'auto', borderRadius: 0.2, ':hover': {
                     cursor: "pointer"
                 },
-            }}>          <CardActionArea onClick={props.onSelect}>
+            }}>
+            <CardActionArea onClick={props.onSelect}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Typography component="div" variant="h5" style={{ marginBottom: '10px' }}>
-                        {"Running"}
+                        {props.event.category.name}
                     </Typography>
                     <Grid container spacing={3} columns={2}>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <DateRange  />
+                                <DateRange />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -74,7 +52,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <AccessTime  />
+                                <AccessTime />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -86,7 +64,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={1.1}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <LocationOn  />
+                                <LocationOn />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -98,7 +76,7 @@ const EventCard = (props: EventProps) => {
                         </Grid>
                         <Grid item xs={0.9}>
                             <Grid container alignItems="center" wrap="nowrap">
-                                <Timer  />
+                                <Timer />
                                 <Typography
                                     variant="body2"
                                     noWrap
@@ -111,7 +89,7 @@ const EventCard = (props: EventProps) => {
                     </Grid>
                     {isSelected && (
                         <Typography variant="body2" sx={{ mt: 2 }}>
-                            <Link to={`/events/${props.event.id}`} style={{ color: "#E5461D", fontWeight: "bold" }}>Register</Link>
+                            <Link to={`/events/${props.event._id}`} style={{ color: "#E5461D", fontWeight: "bold" }}>Register</Link>
                         </Typography>
                     )}
                 </CardContent>

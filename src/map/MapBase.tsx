@@ -6,10 +6,10 @@ import { MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapLayerMouseEvent } from 'maplibre-gl';
 import EntityLoader from './EntityLoader';
-import { Event } from "../components/EventCard";
 import "./MapBase.css";
 import MapSideBar from '../components/MapSideBar';
 import mapboxgl from 'maplibre-gl';
+import { Event } from '../models/Event';
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
@@ -33,11 +33,11 @@ function MapBase() {
         const map = mapRef.current?.getMap();
         const features = map?.queryRenderedFeatures(e.point);
 
-        if (features?.length && features[0]?.properties.id) {
-            setSelectedEvent(features[0]?.properties.id);
+        if (features?.length && features[0]?.properties._id) {
+            setSelectedEvent(features[0]?.properties._id);
 
             // Scroll to the selected event
-            const index = eventEntities.findIndex(event => event.id === features[0]?.properties.id || event.id === features[0]?.properties.id);
+            const index = eventEntities.findIndex(event => event._id === features[0]?.properties._id || event._id === features[0]?.properties._id);
             eventRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     };

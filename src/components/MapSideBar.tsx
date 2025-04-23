@@ -1,7 +1,8 @@
 import React from 'react'
-import EventCard, { Event } from './EventCard'
+import EventCard from './EventCard'
 import "./MapSideBar.css"
 import { useMap } from 'react-map-gl/maplibre';
+import { Event } from '../models/Event';
 
 interface MapSideBarProps {
     eventEntities: Event[];
@@ -17,12 +18,12 @@ const MapSideBar = (props: MapSideBarProps) => {
         <div id="map-side-bar">
             {props.eventEntities.map((event, index) => (
                 <div
-                    key={event.id}
+                    key={event._id}
                     ref={(el) => (props.eventRefs.current[index] = el)}
                     style={{ padding: 20 }}
                 >
                     <EventCard onSelect={() => {
-                        props.onEventSelected(event.id);
+                        props.onEventSelected(event._id);
                         map?.flyTo({ speed: 1.5, zoom: 15, center: [event.location.longitude, event.location.latitude] })
                     }} selected={props.selectedEvent} event={event} />
                 </div>

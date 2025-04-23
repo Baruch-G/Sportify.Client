@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { SymbolLayerSpecification, useMap } from "react-map-gl/maplibre";
 // import aircraft from "./assets/aircraft.svg";
 // import { sources } from "./map/sources/source";
-import { Event } from "../components/EventCard";
+import { Event } from "../models/Event";
 // import Events from "./map/Events";
 import { Source, Layer } from 'react-map-gl/maplibre';
 import { type FeatureCollection } from 'geojson';
@@ -30,7 +30,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
                         coordinates: [e.location.longitude, e.location.latitude]
                     },
                     properties: {
-                        id: e.id,
+                        id: e._id,
                         title: e.address.addressLine1 || "Event Location",
                         sportIcon: "football-icon" // Assuming category has icon reference
                     }

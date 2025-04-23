@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
     <AppBar sx={{ backgroundColor: 'white', color: 'black', position: 'sticky', zIndex: 1 }} position="static">
       <Toolbar sx={{ justifyContent: 'space-between', px: 2 }}>
         {/* Left section: Logo + Burger icon (on mobile) */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mr: 4 }}>
           <img src="/sportify-logo.png" alt="Sportify Logo" height="40" style={{ marginRight: 8 }} />
 
           {isMobile && (
@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
 
         {/* Center section: Navigation links (desktop only) */}
         {!isMobile && (
-          <Box sx={{ display: 'flex', gap: '20px', flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', gap: '20px', flexGrow: 1, ml: 2 }}>
             {navPages.map((item, index) => (
               <Typography
                 key={index}
