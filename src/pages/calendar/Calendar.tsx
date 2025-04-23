@@ -5,7 +5,7 @@ import { enUS } from 'date-fns/locale/en-US'
 import './Calendar.css'
 import { useEffect, useState } from 'react'
 import getEvents from '../../api/EventsApi'
-import { Event } from '../../data/Event'
+import { Event } from '../../components/EventCard'
 
 const locales = {
   'en-US': enUS
@@ -20,11 +20,11 @@ const localizer = dateFnsLocalizer({
 })
 
 const MyCalendar = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const eventsToDisplay = events.map((event: Event) => {
     return {
-      title: event.category,
+      title: "", // event.category,
       start: new Date(event.date),
       end: new Date(new Date(event.date).setHours(new Date(event.date).getHours() + event.duration))
     }
