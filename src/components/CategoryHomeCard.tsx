@@ -3,7 +3,7 @@ import React from 'react';
 
 export interface SportKind {
     name: string;
-    id: string;
+    _id: string;
     imageURL: string;
     description: string;
 }

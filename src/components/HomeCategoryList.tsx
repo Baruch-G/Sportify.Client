@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CategoryHomeCard, { SportKind } from './CategoryHomeCard';
-import { Grid, useMediaQuery, useTheme } from '@mui/material';
+import { Grid, Link, useMediaQuery, useTheme } from '@mui/material';
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
 
@@ -30,12 +30,30 @@ const HomeCategoryList = () => {
 
     return (
         <>
-            <Grid container spacing={3} justifyContent="center" style={!isMobile ?  {  padding: '70px' } : {padding: '20px'}}>
+            <Grid container spacing={3} justifyContent="center" style={isMobile ?  {  padding: '20px' } : {padding: '70px 70px 30px 70px'}}>
                 {categories?.map((cat, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
-                        <CategoryHomeCard key={cat.id} sportKind={cat} />
+                        <CategoryHomeCard key={cat._id} sportKind={cat} />
                     </Grid>
                 ))}
+            </Grid>
+
+
+            <Grid container justifyContent="center" sx={{ mt: 2, mb: 4 }}>
+                <Link
+                    component="button"
+                    variant="body1"
+                    onClick={() => {}}
+                    sx={{
+                        color: 'text.secondary',
+                        textDecoration: 'none',
+                        '&:hover': {
+                            textDecoration: 'underline'
+                        }
+                    }}
+                >
+                    Load more
+                </Link>
             </Grid>
         </>
     )

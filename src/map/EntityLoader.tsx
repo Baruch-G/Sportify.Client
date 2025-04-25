@@ -17,7 +17,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
     const { EventMap } = useMap();
     const [source, setSource] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
     const { current: map } = useMap();
-    
+
 
     useEffect(() => {
         if (props.eventEntities.length) {
@@ -30,9 +30,9 @@ const EntityLoader = (props: EntityLoaderProps) => {
                         coordinates: [e.location.longitude, e.location.latitude]
                     },
                     properties: {
-                        id: e._id,
+                        _id: e._id,
                         title: e.address.addressLine1 || "Event Location",
-                        sportIcon: "football-icon" // Assuming category has icon reference
+                        category: e.category.name.replace(" ", "-").toLowerCase() // Assuming category has icon reference
                     }
                 }))
             };
@@ -42,28 +42,24 @@ const EntityLoader = (props: EntityLoaderProps) => {
     }, [props.eventEntities]);
 
     useEffect(() => {
-        if (!map) return;
+        if (!map || !props.eventEntities.length) return;
 
         const loadImages = async () => {
-            const locationIcon = new Image(40, 40);
-            const sportIcon = new Image(30, 30);
-
-            locationIcon.src = "/location_icon.png";
-            sportIcon.src = "/football.png"; // Sport category icon
-
-            locationIcon.onload = () => {
-                map?.addImage("location-icon", locationIcon);
-            };
-
-            sportIcon.onload = () => {
-                map?.addImage("football-icon", sportIcon);
-            };
-        };
+            console.log(props.eventEntities);
+            
+            [...new Set(props.eventEntities.map(e => e.category.name.replace(" ", "-").toLocaleLowerCase()))].forEach((iconName: string) => {
+                const image = new Image(40, 40);
+                image.src = iconName + ".png";
+                image.onload = () => {
+                    map?.addImage(iconName, image);
+                }
+            });
+        }
 
         loadImages();
-    }, [map]);
+    }, [map, props.eventEntities]);
 
-    const locationLayer : SymbolLayerSpecification = {
+    const locationLayer: SymbolLayerSpecification = {
         id: 'event-locations',
         source: "events-source",
         type: 'symbol',
@@ -74,12 +70,12 @@ const EntityLoader = (props: EntityLoaderProps) => {
         }
     };
 
-    const sportLayer : SymbolLayerSpecification = {
+    const sportLayer: SymbolLayerSpecification = {
         id: 'event-sport-icons',
         source: "events-source",
         type: 'symbol',
         layout: {
-            'icon-image': ['get', 'sportIcon'],
+            'icon-image': ['get', 'category'],
             'icon-size': 0.7,
             'icon-allow-overlap': true,
             'icon-offset': [0, -15]
