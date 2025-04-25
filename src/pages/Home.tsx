@@ -2,7 +2,7 @@ import React from 'react'
 import "./Home.css"
 import { Box, Container, Typography, Button } from '@mui/material';
 import HomeCategoryList from '../components/HomeCategoryList';
-
+import { Link } from 'react-router-dom';
 const Home = () => {
     return (
         <div>
@@ -84,7 +84,7 @@ const Home = () => {
                             },
                         }}
                     >
-                        FIND EVENTS
+                        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/events">FIND EVENTS</Link>
                     </Button>
                 </Container>
 
