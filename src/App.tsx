@@ -10,7 +10,6 @@ import Home from './pages/Home'
 import { ThemeProvider } from '@emotion/react'
 import theme from './theme/Theme'
 import AddEvent from './components/AddEvent'
-import Chatbot from './components/ChatBot'
 import ChatbotWidget from './components/ChatbotWidget'
 
 function App() {
