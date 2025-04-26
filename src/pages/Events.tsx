@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Grid, 
   CircularProgress, 
@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Event } from '../models/Event';
 import EventItem from '../components/EventItem';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -27,6 +27,7 @@ function EventList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Filter states
   const [categoryFilter, setCategoryFilter] = useState<string>('');
@@ -34,6 +35,30 @@ function EventList() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [sortBy, setSortBy] = useState<string>('date');
 
+  // Get unique categories from events
+  const availableCategories = useMemo(() => {
+    const categoryMap = new Map<string, string>();
+    events.forEach(event => {
+      if (!categoryMap.has(event.category._id)) {
+        categoryMap.set(event.category._id, event.category.name);
+      }
+    });
+    return Array.from(categoryMap.entries()).map(([id, name]) => ({ id, name }));
+  }, [events]);
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      // Check if the category ID exists in our events
+      const categoryExists = events.some(event => event.category._id === categoryFromUrl);
+      if (categoryExists) {
+        setCategoryFilter(categoryFromUrl);
+      }
+    }
+  }, [searchParams, events]);
+
+  // Fetch events
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,7 +79,15 @@ function EventList() {
   }, []);
 
   const handleCategoryChange = (event: SelectChangeEvent) => {
-    setCategoryFilter(event.target.value);
+    const newCategory = event.target.value;
+    setCategoryFilter(newCategory);
+    
+    // Update URL parameters
+    if (newCategory) {
+      setSearchParams({ category: newCategory });
+    } else {
+      setSearchParams({});
+    }
   };
 
   const handleDifficultyChange = (event: SelectChangeEvent) => {
@@ -70,7 +103,7 @@ function EventList() {
 
     // Apply filters
     if (categoryFilter) {
-      filteredEvents = filteredEvents.filter(event => event.category.name === categoryFilter);
+      filteredEvents = filteredEvents.filter(event => event.category._id === categoryFilter);
     }
     if (difficultyFilter) {
       filteredEvents = filteredEvents.filter(event => event.difficultyLevel === parseInt(difficultyFilter));
@@ -138,8 +171,8 @@ function EventList() {
                 onChange={handleCategoryChange}
               >
                 <MenuItem value="">All</MenuItem>
-                {Array.from(new Set(events.map(event => event.category.name))).map(category => (
-                  <MenuItem key={category} value={category}>{category}</MenuItem>
+                {availableCategories.map(category => (
+                  <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -201,8 +234,8 @@ function EventList() {
         <Box sx={{ mb: 4 }}>
           <Typography variant="h4" sx={{ mb: 2 }}>Upcoming Events</Typography>
           <Grid container spacing={2}>
-            {upcomingEvents.map((event, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+            {upcomingEvents.map((event) => (
+              <Grid item xs={12} sm={6} md={4} key={event._id}>
                 <EventItem onClick={() => navigate(`/events/${event._id}`)} event={event} />
               </Grid>
             ))}
@@ -215,8 +248,8 @@ function EventList() {
         <Box>
           <Typography variant="h4" sx={{ mb: 2 }}>Past Events</Typography>
           <Grid container spacing={2}>
-            {pastEvents.map((event, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+            {pastEvents.map((event) => (
+              <Grid item xs={12} sm={6} md={4} key={event._id}>
                 <EventItem onClick={() => navigate(`/events/${event._id}`)} event={event} />
               </Grid>
             ))}
