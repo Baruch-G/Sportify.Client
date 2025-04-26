@@ -10,6 +10,8 @@ import Home from './pages/Home'
 import { ThemeProvider } from '@emotion/react'
 import theme from './theme/Theme'
 import AddEvent from './components/AddEvent'
+import Chatbot from './components/ChatBot'
+import ChatbotWidget from './components/ChatbotWidget'
 
 function App() {
   return (
@@ -21,10 +23,12 @@ function App() {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/map" element={<MapBase />} />
         <Route path="/coaches" element={<div >coaches</div>} />
+        {/* <Route path="/chat" element={<Chatbot />} /> */}
         <Route path="/register" element={<StepperSignIn />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
         <Route path="/add-event" element={<AddEvent />} />
       </Routes>
+      <ChatbotWidget />
     </ThemeProvider>
   )
 }

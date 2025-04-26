@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CategoryHomeCard, { SportKind } from './CategoryHomeCard';
 import { Grid, Link, useMediaQuery, useTheme } from '@mui/material';
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+import { Link as RouterLink } from 'react-router-dom';
 
 
 
@@ -33,11 +34,12 @@ const HomeCategoryList = () => {
             <Grid container spacing={3} justifyContent="center" style={isMobile ?  {  padding: '20px' } : {padding: '70px 70px 30px 70px'}}>
                 {categories?.map((cat, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
-                        <CategoryHomeCard key={cat._id} sportKind={cat} />
+                        <RouterLink to={`/events?category=${cat._id}`} style={{ textDecoration: 'none' }}>
+                            <CategoryHomeCard key={cat._id} sportKind={cat} />
+                        </RouterLink>
                     </Grid>
                 ))}
             </Grid>
-
 
             <Grid container justifyContent="center" sx={{ mt: 2, mb: 4 }}>
                 <Link
