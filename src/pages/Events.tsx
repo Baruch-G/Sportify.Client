@@ -158,7 +158,7 @@ function EventList() {
   const pastEvents = filteredEvents.filter(event => new Date(event.date) <= new Date());
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box style={{ margin: '30px', maxWidth: '1300px', marginLeft: 'auto', marginRight: 'auto' }}>
       {/* Filters and Sort Section */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
