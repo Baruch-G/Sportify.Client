@@ -1,5 +1,5 @@
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import { format, parse, startOfWeek, getDay } from 'date-fns'
+import { format, parse, startOfWeek, getDay, addDays, subDays } from 'date-fns'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { enUS } from 'date-fns/locale/en-US'
 import './Calendar.css'
@@ -24,6 +24,7 @@ const MyCalendar = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [date, setDate] = useState(new Date());
   const selectedEventRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,6 +69,15 @@ const MyCalendar = () => {
     setSelectedEvent(event.resource);
   };
 
+  const handleNavigate = (newDate: Date) => {
+    setDate(newDate);
+  };
+
+  const handleViewChange = (newView: string) => {
+    // Reset to current date when changing views
+    setDate(new Date());
+  };
+
   return (
     <div style={{ 
       display: 'flex', 
@@ -76,33 +86,49 @@ const MyCalendar = () => {
       height: isMobile ? 'auto' : 'calc(100vh - 60px)',
       gap: isMobile ? '20px' : '0'
     }}>
-      {/* Events List */}
-      <div style={{ 
-        width: isMobile ? '100%' : '400px', 
-        padding: '20px', 
-        borderRight: isMobile ? 'none' : '1px solid #ddd',
-        borderBottom: isMobile ? '1px solid #ddd' : 'none',
-        overflowY: 'auto',
-        maxHeight: isMobile ? '300px' : 'none'
-      }}>
-        <h2 style={{ 
-          marginBottom: '20px',
-          color: '#1976d2',
-          fontSize: '1.5rem',
-          fontWeight: '600'
-        }}>Events</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {events.map((event) => (
-            <div key={event._id} ref={selectedEvent?._id === event._id ? selectedEventRef : null}>
-              <EventCard
-                event={event}
-                selected={selectedEvent?._id}
-                onSelect={() => setSelectedEvent(event)}
-              />
-            </div>
-          ))}
+      {/* Events List - Only show on desktop or when an event is selected on mobile */}
+      {(!isMobile || selectedEvent) && (
+        <div style={{ 
+          width: isMobile ? '100%' : '400px', 
+          padding: '20px', 
+          borderRight: isMobile ? 'none' : '1px solid #ddd',
+          borderBottom: isMobile ? '1px solid #ddd' : 'none',
+          overflowY: 'auto',
+          maxHeight: isMobile ? '300px' : 'none'
+        }}>
+          <h2 style={{ 
+            marginBottom: '20px',
+            color: '#1976d2',
+            fontSize: '1.5rem',
+            fontWeight: '600'
+          }}>Events</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {isMobile ? (
+              // On mobile, only show the selected event
+              selectedEvent && (
+                <div ref={selectedEventRef}>
+                  <EventCard
+                    event={selectedEvent}
+                    selected={selectedEvent._id}
+                    onSelect={() => setSelectedEvent(null)}
+                  />
+                </div>
+              )
+            ) : (
+              // On desktop, show all events
+              events.map((event) => (
+                <div key={event._id} ref={selectedEvent?._id === event._id ? selectedEventRef : null}>
+                  <EventCard
+                    event={event}
+                    selected={selectedEvent?._id}
+                    onSelect={() => setSelectedEvent(event)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Calendar */}
       <div style={{ 
@@ -126,8 +152,11 @@ const MyCalendar = () => {
               color: event.selected ? 'white' : undefined,
             }
           })}
-          views={['month', 'week', 'day', 'agenda']}
-          defaultView={isMobile ? 'agenda' : 'month'}
+          views={isMobile ? ['week', 'day'] : ['month', 'week', 'day']}
+          defaultView={isMobile ? 'week' : 'month'}
+          date={date}
+          onNavigate={handleNavigate}
+          onView={handleViewChange}
           popup
           selectable
         />

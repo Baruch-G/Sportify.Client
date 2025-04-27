@@ -71,28 +71,6 @@
   background: #e3f2fd !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .responsive-calendar {
-    padding: 8px;
-  }
-
-  .rbc-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .rbc-toolbar button {
-    width: 100%;
-    margin: 4px 0 !important;
-  }
-
-  .rbc-event {
-    font-size: 0.8em;
-    padding: 2px 4px !important;
-  }
-}
-
 /* Time grid styling */
 .rbc-time-view {
   border-radius: 8px;
