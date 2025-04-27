@@ -25,22 +25,23 @@
 
 .rbc-toolbar button:hover {
   background: #f5f5f5 !important;
-  border-color: #1976d2 !important;
-  color: #1976d2 !important;
+  border-color: #FF5722 !important;
+  color: #FF5722 !important;
 }
 
 .rbc-toolbar button.rbc-active {
-  background: #1976d2 !important;
+  background: #FF5722 !important;
   color: white !important;
-  border-color: #1976d2 !important;
+  border-color: #FF5722 !important;
 }
 
 /* Modern event styling */
 .rbc-event {
   border-radius: 6px !important;
   padding: 4px 8px !important;
-  background: #1976d2 !important;
-  border: none !important;
+  background: transparent !important;
+  border: 1px solid #FF5722 !important;
+  color: #FF5722 !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   transition: all 0.2s ease !important;
 }
@@ -51,9 +52,9 @@
 }
 
 .selected-event {
-  border: 2px solid #1976d2 !important;
+  border: 2px solid #FF5722 !important;
   box-shadow: 0 0 8px rgba(25, 118, 210, 0.3) !important;
-  background: #1976d2 !important;
+  background: #FF5722 !important;
   color: white !important;
 }
 
@@ -97,7 +98,7 @@
 
 /* Current time indicator */
 .rbc-current-time-indicator {
-  background-color: #1976d2;
+  background-color: #FF5722;
   height: 2px;
 }
 

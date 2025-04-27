@@ -98,7 +98,6 @@ const MyCalendar = () => {
         }}>
           <h2 style={{ 
             marginBottom: '20px',
-            color: '#1976d2',
             fontSize: '1.5rem',
             fontWeight: '600'
           }}>Events</h2>
