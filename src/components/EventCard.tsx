@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Card, CardContent, Typography, Grid, CardActionArea } from '@mui/material';
+import { Card, CardContent, Typography, Grid, CardActionArea, useTheme } from '@mui/material';
 import { DateRange, LocationOn, Timer, AccessTime } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { Event } from '../models/Event';
@@ -9,14 +9,15 @@ export interface EventProps {
     onSelect: () => void;
 }
 
-const selectedStyle = {
-    boxShadow: "0px 4px 8px rgba(229, 70, 29, 0.2)", // Softer shadow
-    transform: "scale(1.02)",
-    borderLeft: "4px solid #E5461D", // Sleek side border for emphasis
-    transition: "all 0.3s ease-in-out", // Smooth hover effect
-};
-
 const EventCard = (props: EventProps) => {
+    const theme = useTheme();
+
+    const selectedStyle = {
+        boxShadow: `0px 4px 8px ${theme.palette.primary.main}33`, // Using primary color with opacity
+        transform: "scale(1.02)",
+        borderLeft: `4px solid ${theme.palette.primary.main}`, // Using primary color
+        transition: "all 0.3s ease-in-out", // Smooth hover effect
+    };
 
     useEffect(() => {
         console.log("Selected Event ID:", props.selected);
@@ -89,7 +90,16 @@ const EventCard = (props: EventProps) => {
                     </Grid>
                     {isSelected && (
                         <Typography variant="body2" sx={{ mt: 2 }}>
-                            <Link to={`/events/${props.event._id}`} style={{ color: "#E5461D", fontWeight: "bold" }}>Register</Link>
+                            <Link 
+                                to={`/events/${props.event._id}`} 
+                                style={{ 
+                                    color: theme.palette.primary.main, 
+                                    fontWeight: 'bold',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                Register
+                            </Link>
                         </Typography>
                     )}
                 </CardContent>

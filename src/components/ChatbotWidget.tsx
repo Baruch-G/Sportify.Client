@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Fab, Box, Card, CardContent, IconButton, TextField, Button, Typography, Stack, CircularProgress, Divider, Paper } from '@mui/material';
-import ChatIcon from '@mui/icons-material/Chat';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 
@@ -181,13 +181,15 @@ const ChatbotWidget = () => {
                         right: 24, 
                         zIndex: 9999,
                         boxShadow: 4,
+                        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                         '&:hover': {
                             boxShadow: 6,
+                            background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
                         }
                     }}
                     onClick={() => setOpen(true)}
                 >
-                    <ChatIcon />
+                    <SmartToyIcon sx={{ fontSize: 28 }} />
                 </Fab>
             )}
 
@@ -253,7 +255,7 @@ const ChatbotWidget = () => {
                                 height: '100%',
                                 color: 'text.secondary'
                             }}>
-                                <ChatIcon sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
+                                <SmartToyIcon sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
                                 <Typography variant="body2">
                                     Ask me about sport events!
                                 </Typography>

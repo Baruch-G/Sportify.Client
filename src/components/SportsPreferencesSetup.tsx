@@ -7,36 +7,15 @@ import {
     Checkbox,
     FormControlLabel,
 } from '@mui/material';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
-import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
-import SportsTennisIcon from '@mui/icons-material/SportsTennis';
-import PoolIcon from '@mui/icons-material/Pool';
-import KayakingIcon from '@mui/icons-material/Kayaking';
-import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import { sportToIconMap } from '../data/sportsMap';
 
 interface SportsPreferencesSetupProps {
     onSubmit: () => void;
 }
 
-function SportsPreferencesSetup(props: SportsPreferencesSetupProps) {
-    const sports = [
-        { label: 'Running', icon: <DirectionsRunIcon /> },
-        { label: 'Dancing', icon: <SportsKabaddiIcon /> },
-        { label: 'Football', icon: <SportsSoccerIcon /> },
-        { label: 'Yoga', icon: <SelfImprovementIcon /> },
-        { label: 'Walking', icon: <DirectionsWalkIcon /> },
-        { label: 'Tennis', icon: <SportsTennisIcon /> },
-        { label: 'Fishing', icon: <PoolIcon /> },
-        { label: 'Climbing', icon: <KayakingIcon /> },
-        { label: 'Bike', icon: <DirectionsBikeIcon /> },
-        { label: 'Running', icon: <DirectionsRunIcon /> },
-        { label: 'Running', icon: <DirectionsRunIcon /> },
-        { label: 'Running', icon: <DirectionsRunIcon /> },
-    ];
+// todo: fetch categories from backend
 
+function SportsPreferencesSetup(props: SportsPreferencesSetupProps) {
     return (
         <Grid container justifyContent="center" style={{ padding: '30px' }}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -46,7 +25,7 @@ function SportsPreferencesSetup(props: SportsPreferencesSetupProps) {
                     </Typography>
 
                     <Grid container spacing={2}>
-                        {sports.map((sport, index) => (
+                        {Object.entries(sportToIconMap).map(([label, icon], index) => (
                             <Grid item xs={6} key={index}>
                                 <FormControlLabel
                                     control={<Checkbox sx={{
@@ -56,8 +35,8 @@ function SportsPreferencesSetup(props: SportsPreferencesSetupProps) {
                                     }} />}
                                     label={
                                         <Grid container alignItems="center" spacing={1}>
-                                            <Grid item>{sport.icon}</Grid>
-                                            <Grid item>{sport.label}</Grid>
+                                            <Grid item>{icon}</Grid>
+                                            <Grid item>{label}</Grid>
                                         </Grid>
                                     }
                                 />

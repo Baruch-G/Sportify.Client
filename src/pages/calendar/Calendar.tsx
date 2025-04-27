@@ -3,7 +3,7 @@ import { format, parse, startOfWeek, getDay } from 'date-fns'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { enUS } from 'date-fns/locale/en-US'
 import './Calendar.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import getEvents from '../../api/EventsApi'
 import { Event } from '../../models/Event'
 import EventCard from '../../components/EventCard'
@@ -11,9 +11,6 @@ import EventCard from '../../components/EventCard'
 const locales = {
   'en-US': enUS
 }
-
-
-
 
 const localizer = dateFnsLocalizer({
   format,
@@ -26,13 +23,25 @@ const localizer = dateFnsLocalizer({
 const MyCalendar = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const selectedEventRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const eventsToDisplay = events.map((event: Event) => {
     return {
       title: event.category.name || "Untitled Event",
       start: new Date(event.date),
       end: new Date(new Date(event.date).setHours(new Date(event.date).getHours() + event.duration)),
-      resource: event // Store the original event data
+      resource: event,
+      selected: selectedEvent?._id === event._id
     }
   });
 
@@ -49,29 +58,58 @@ const MyCalendar = () => {
     fetchEvents();
   }, []);
 
+  useEffect(() => {
+    if (selectedEvent && selectedEventRef.current) {
+      selectedEventRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [selectedEvent]);
+
   const handleSelectEvent = (event: any) => {
     setSelectedEvent(event.resource);
   };
 
   return (
-    <div style={{ display: 'flex', margin: 30, height: 'calc(100vh - 60px)' }}>
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: isMobile ? 'column' : 'row',
+      margin: isMobile ? '16px' : '30px', 
+      height: isMobile ? 'auto' : 'calc(100vh - 60px)',
+      gap: isMobile ? '20px' : '0'
+    }}>
       {/* Events List */}
-      <div style={{ width: '400px', padding: '20px', borderRight: '1px solid #ddd', overflowY: 'auto' }}>
-        <h2>Events</h2>
+      <div style={{ 
+        width: isMobile ? '100%' : '400px', 
+        padding: '20px', 
+        borderRight: isMobile ? 'none' : '1px solid #ddd',
+        borderBottom: isMobile ? '1px solid #ddd' : 'none',
+        overflowY: 'auto',
+        maxHeight: isMobile ? '300px' : 'none'
+      }}>
+        <h2 style={{ 
+          marginBottom: '20px',
+          color: '#1976d2',
+          fontSize: '1.5rem',
+          fontWeight: '600'
+        }}>Events</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {events.map((event) => (
-            <EventCard
-              key={event._id}
-              event={event}
-              selected={selectedEvent?._id}
-              onSelect={() => setSelectedEvent(event)}
-            />
+            <div key={event._id} ref={selectedEvent?._id === event._id ? selectedEventRef : null}>
+              <EventCard
+                event={event}
+                selected={selectedEvent?._id}
+                onSelect={() => setSelectedEvent(event)}
+              />
+            </div>
           ))}
         </div>
       </div>
 
       {/* Calendar */}
-      <div style={{ flex: 1, marginLeft: '20px' }}>
+      <div style={{ 
+        flex: 1, 
+        marginLeft: isMobile ? '0' : '20px',
+        height: isMobile ? '500px' : '100%'
+      }}>
         <Calendar
           localizer={localizer}
           events={eventsToDisplay}
@@ -81,6 +119,17 @@ const MyCalendar = () => {
           className="responsive-calendar"
           onSelectEvent={handleSelectEvent}
           selected={selectedEvent ? [selectedEvent] : []}
+          eventPropGetter={(event) => ({
+            className: event.selected ? 'selected-event' : '',
+            style: {
+              backgroundColor: event.selected ? '#1976d2' : undefined,
+              color: event.selected ? 'white' : undefined,
+            }
+          })}
+          views={['month', 'week', 'day', 'agenda']}
+          defaultView={isMobile ? 'agenda' : 'month'}
+          popup
+          selectable
         />
       </div>
     </div>
