@@ -24,7 +24,7 @@ const MapSideBar = (props: MapSideBarProps) => {
                 >
                     <EventCard onSelect={() => {
                         props.onEventSelected(event._id);
-                        map?.flyTo({ speed: 1.5, zoom: 15, center: [event.location.longitude, event.location.latitude] })
+                        map?.flyTo({ speed: 1.5, zoom: 18, center: [event.location.longitude, event.location.latitude], pitch: 50 })
                     }} selected={props.selectedEvent} event={event} />
                 </div>
             ))}

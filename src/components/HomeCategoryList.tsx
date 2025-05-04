@@ -30,8 +30,8 @@ const HomeCategoryList = () => {
     }, []);
 
     return (
-        <>
-            <Grid container spacing={3} justifyContent="center" style={isMobile ?  {  padding: '20px' } : {padding: '70px 70px 30px 70px'}}>
+        <div style={{ maxWidth: '1300px', margin: '0 auto' }}>
+            <Grid container spacing={3} justifyContent="center" style={isMobile ?  {  padding: '20px' } : {padding: '35px 70px 10px 70px'}}>
                 {categories?.map((cat, index) => (
                     <Grid item xs={12} sm={6} md={4} key={index}>
                         <RouterLink to={`/events?category=${cat._id}`} style={{ textDecoration: 'none' }}>
@@ -57,7 +57,7 @@ const HomeCategoryList = () => {
                     Load more
                 </Link>
             </Grid>
-        </>
+        </div>
     )
 }
 

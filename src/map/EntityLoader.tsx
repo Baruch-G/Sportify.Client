@@ -48,8 +48,8 @@ const EntityLoader = (props: EntityLoaderProps) => {
             console.log(props.eventEntities);
             
             [...new Set(props.eventEntities.map(e => e.category.name.replace(" ", "-").toLocaleLowerCase()))].forEach((iconName: string) => {
-                const image = new Image(40, 40);
-                image.src = iconName + ".png";
+                const image = new Image(80, 80);
+                image.src = "gemini/" + iconName + ".png";
                 image.onload = () => {
                     map?.addImage(iconName, image);
                 }
@@ -76,7 +76,13 @@ const EntityLoader = (props: EntityLoaderProps) => {
         type: 'symbol',
         layout: {
             'icon-image': ['get', 'category'],
-            'icon-size': 0.7,
+            'icon-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                10, 0.7,
+                16, 1
+            ],
             'icon-allow-overlap': true,
             'icon-offset': [0, -15]
         }
@@ -88,7 +94,7 @@ const EntityLoader = (props: EntityLoaderProps) => {
             <Layer {...sportLayer} />
         </Source>
 
-        <button style={{ position: "absolute", bottom: 100, right: 10 }} onClick={() => map?.flyTo({ center: [-122.4, 37.8] })}>Search in this area</button>
+        <button style={{ position: "absolute", bottom: 100, right: 10 }} onClick={() => map?.flyTo({ center: [-122.4, 37.8]})}>Search in this area</button>
     </>;
 };
 

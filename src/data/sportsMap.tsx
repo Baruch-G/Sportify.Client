@@ -9,6 +9,11 @@ import KayakingIcon from '@mui/icons-material/Kayaking';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import SportsBasketball from '@mui/icons-material/SportsBasketball';
+import { FaBoxTissue } from 'react-icons/fa';
+import { GiBoxingGloveSurprise } from "react-icons/gi";
+import { GiHighKick } from "react-icons/gi";
+import { FaGolfBall } from "react-icons/fa";
+
 
 export const sportToIconMap = {
     'running': <DirectionsRunIcon />,
@@ -19,9 +24,22 @@ export const sportToIconMap = {
     'tennis': <SportsTennisIcon />,
     'fishing': <PoolIcon />,
     'climbing': <KayakingIcon />,
-    'bike': <DirectionsBikeIcon />,
+    'cycling': <DirectionsBikeIcon />,
     'swimming': <PoolIcon />,
     'skiing': <DownhillSkiingIcon />,
     'table-tennis': <SportsTennisIcon />,
-    'basketball': <SportsBasketball />
+    'basketball': <SportsBasketball />,
+    'boxing': <GiBoxingGloveSurprise/>,
+    'martial-arts' : <GiHighKick/>,
+    'golf': <FaGolfBall />
 }
+
+
+
+
+
+
+
+
+
+
