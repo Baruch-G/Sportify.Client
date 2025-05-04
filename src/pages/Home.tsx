@@ -3,6 +3,7 @@ import "./Home.css"
 import { Box, Container, Typography, Button } from '@mui/material';
 import HomeCategoryList from '../components/HomeCategoryList';
 import { Link } from 'react-router-dom';
+
 const Home = () => {
     return (
         <div>
@@ -50,6 +51,7 @@ const Home = () => {
                             fontWeight: 800,
                             textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                             letterSpacing: 1,
+                            mb:5
                         }}
                     >
                         DISCOVER YOUR NEXT CHALLENGE
@@ -60,9 +62,9 @@ const Home = () => {
                         color="white"
                         gutterBottom
                         sx={{
-                            mb: 4,
+                            mb: 6,
                             textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
-                            maxWidth: 600,
+                            maxWidth: 500,
                             mx: 'auto',
                         }}
                     >
@@ -74,10 +76,9 @@ const Home = () => {
                         color="primary"
                         size="large"
                         sx={{
-                            px: 4,
-                            py: 1.5,
+                            px: 3.5,
+                            py: 1.2,
                             fontSize: '1rem',
-                            borderRadius: 30,   
                             transition: 'transform 0.2s',
                             '&:hover': {
                                 transform: 'translateY(-2px)',

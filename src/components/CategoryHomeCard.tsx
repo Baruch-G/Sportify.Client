@@ -1,5 +1,6 @@
-import { Card, CardActionArea, CardMedia, CardContent, Typography, Button } from '@mui/material';
+import { Card, CardActionArea, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
 import React from 'react';
+import { sportToIconMap } from '../data/sportsMap';
 
 export interface SportKind {
     name: string;
@@ -24,14 +25,29 @@ const CategoryHomeCard = (props: CategoryHomeCardProps) => {
             }}
         >
             <CardActionArea>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 12,
+                        left: 12,
+                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        borderRadius: '50%',
+                        padding: 1,
+                        zIndex: 1,
+                    }}
+                >
+                    {sportToIconMap[props.sportKind.name.replace(' ', '-').toLowerCase() as keyof typeof sportToIconMap]}
+                </Box>
+
                 <CardMedia
                     component="img"
-                    height="250"
+                    height="200"
                     image={"/HomeCards/" + props.sportKind.imageURL}
                     // image="/HomeCards//Football.webp"
                     alt={props.sportKind.name}
-                    sx={{ borderRadius: '12px' }} // <- Rounded corners just for image
-                />
+                    sx={{ borderRadius: '12px', filter: 'brightness(60%)' }} // <- Rounded corners just for image
+                >
+                </CardMedia>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                         {props.sportKind.name}

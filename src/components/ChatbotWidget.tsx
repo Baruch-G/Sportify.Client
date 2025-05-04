@@ -34,6 +34,43 @@ const ChatbotWidget = () => {
         scrollToBottom();
     }, [messages]);
 
+    // Utility to parse Markdown-style links and render as clickable links
+    const renderWithLinks = (text: string) => {
+        // Regex to match [label](url)
+        const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+        const parts: (string | JSX.Element)[] = [];
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+        while ((match = linkRegex.exec(text)) !== null) {
+            if (match.index > lastIndex) {
+                parts.push(text.substring(lastIndex, match.index));
+            }
+            parts.push(
+                <a
+                    key={match![2] + match!.index}
+                    href={match![2]}
+                    style={{ color: '#1976d2', textDecoration: 'underline', wordBreak: 'break-all' }}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => {
+                        // If it's an internal link, use navigate
+                        if (match![2].startsWith('/events/')) {
+                            e.preventDefault();
+                            navigate(match![2]);
+                        }
+                    }}
+                >
+                    {match![1]}
+                </a>
+            );
+            lastIndex = match.index + match[0].length;
+        }
+        if (lastIndex < text.length) {
+            parts.push(text.substring(lastIndex));
+        }
+        return parts;
+    };
+
     const formatMessage = (text: string) => {
         // Split the text into sections based on numbered lists and headers
         const sections = text.split(/(\d+\.\s+[^:]+:)/g);
@@ -90,10 +127,13 @@ const ChatbotWidget = () => {
                                             variant="body2" 
                                             sx={{ 
                                                 lineHeight: 1.5,
-                                                color: 'text.secondary'
+                                                color: 'text.secondary',
+                                                overflowWrap: 'break-word',
+                                                wordBreak: 'break-word',
+                                                overflowX: 'hidden',
                                             }}
                                         >
-                                            {line.replace(/^\*\s+/, '').replace(/\*/g, '')}
+                                            {renderWithLinks(line.replace(/^\*\s+/, '').replace(/\*/g, ''))}
                                         </Typography>
                                     </Box>
                                 );
@@ -106,10 +146,13 @@ const ChatbotWidget = () => {
                                         sx={{ 
                                             mb: 1,
                                             lineHeight: 1.5,
-                                            color: 'text.secondary'
+                                            color: 'text.secondary',
+                                            overflowWrap: 'break-word',
+                                            wordBreak: 'break-word',
+                                            overflowX: 'hidden',
                                         }}
                                     >
-                                        {line.replace(/\*/g, '')}
+                                        {renderWithLinks(line.replace(/\*/g, ''))}
                                     </Typography>
                                 );
                             }
@@ -244,7 +287,11 @@ const ChatbotWidget = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
-                        backgroundColor: '#f5f5f5'
+                        backgroundColor: '#f5f5f5',
+                        minHeight: 0,
+                        '& > *': {
+                            flexShrink: 0
+                        }
                     }}>
                         {messages.length === 0 ? (
                             <Box sx={{ 
@@ -266,7 +313,7 @@ const ChatbotWidget = () => {
                                     key={index}
                                     sx={{
                                         alignSelf: message.isUser ? 'flex-end' : 'flex-start',
-                                        maxWidth: '80%',
+                                        maxWidth: '90%',
                                     }}
                                 >
                                     <Card

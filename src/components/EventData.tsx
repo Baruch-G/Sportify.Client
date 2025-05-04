@@ -1,6 +1,6 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, Grid, Divider, Box, Paper, Avatar, Chip, Stack } from '@mui/material';
+import { Link, useParams } from 'react-router-dom';
+import { Card, CardContent, Typography, Grid, Divider, Box, Paper, Avatar, Chip, Stack, Rating } from '@mui/material';
 import { Event } from '../models/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -109,220 +109,140 @@ function EventDetails() {
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: '1200px', margin: '0 auto' }}>
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          borderRadius: 2,
+      <Paper
+        elevation={3}
+        sx={{
+          borderRadius: 3,
           overflow: 'hidden',
-          '&:hover': {
-            boxShadow: 6
-          }
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          minHeight: '500px',
         }}
       >
-        <Grid container>
-          {/* Image Column */}
-          <Grid item xs={12} md={5}>
-            <Box
-              sx={{
-                height: { xs: '300px', md: '100%' },
-                minHeight: '400px',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3))',
-                }
-              }}
-            >
-              <img 
-                src={"/HomeCards/" + event.category.imageURL} 
-                alt={event.category.name} 
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover' 
-                }} 
-              />
-            </Box>
-          </Grid>
+        {/* Left Image */}
+        <Box
+          sx={{
+            flex: 1,
+            height: { xs: '250px', md: 'auto' },
+            backgroundImage: `url(/HomeCards/${event.category.imageURL})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
 
-          {/* Details Column */}
-          <Grid item xs={12} md={7}>
-            <Box sx={{ p: { xs: 2, md: 4 } }}>
-              <Typography 
-                variant="h4" 
-                gutterBottom 
-                sx={{ 
-                  fontWeight: 'bold', 
-                  color: 'primary.main',
-                  mb: 3
-                }}
-              >
-                {event.category.name} Event
-              </Typography>
+        {/* Right Details */}
+        <Box sx={{ flex: 1, p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {/* Title */}
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+            {event.category.name} Event
+          </Typography>
 
-              {/* Location Section */}
-              <Box sx={{ mb: 4 }}>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-                  <LocationOnIcon color="primary" />
-                  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                    Location
-                  </Typography>
-                </Stack>
-                <Typography variant="body1" sx={{ pl: 4 }}>
-                  {event.address.addressLine1}
-                  {event.address.addressLine2 && `, ${event.address.addressLine2}`}
-                  <br />
-                  {event.address.city}, {event.address.country}
+          {/* Location */}
+          <Box>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <LocationOnIcon color="primary" />
+              <Typography variant="subtitle1" color="text.secondary">Location</Typography>
+            </Stack>
+            <Typography variant="body1" sx={{ mt: 1, pl: 4 }}>
+              {event.address.addressLine1}
+              {event.address.addressLine2 && `, ${event.address.addressLine2}`}
+              <br />
+              {event.address.city}, {event.address.country}
+            </Typography>
+          </Box>
+
+          {/* Event Info */}
+          <Divider />
+          <Box>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <CalendarTodayIcon color="primary" />
+              <Typography variant="subtitle1" color="text.secondary">Event Information</Typography>
+            </Stack>
+            <Grid container spacing={2} sx={{ pl: 4 }}>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">Date</Typography>
+                <Typography>
+                  {new Date(event.date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
                 </Typography>
-              </Box>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">Time</Typography>
+                <Typography>
+                  {new Date(event.date).toLocaleTimeString(undefined, {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">Duration</Typography>
+                <Typography>{event.duration} hours</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography variant="body2" color="text.secondary">Difficulty</Typography>
+                <Typography>{event.difficultyLevel}</Typography>
+              </Grid>
+            </Grid>
+          </Box>
 
-              {/* Event Details Section */}
-              <Box sx={{ mb: 4 }}>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                  <CalendarTodayIcon color="primary" />
-                  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                    Event Information
-                  </Typography>
+          {/* Organizer */}
+          <Divider />
+          <Box>
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+              <PersonIcon color="primary" />
+              <Typography variant="subtitle1" color="text.secondary">Organizer</Typography>
+            </Stack>
+            {organizer ? (
+              <Stack direction="row" spacing={4} sx={{ pl: 4, pt: 4 }} alignItems="flex-start" justifyContent="space-between">
+                {/* Left Side: Avatar, Name, Rating */}
+                <Stack direction="row" spacing={1} minWidth={150}>
+                  <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
+                    {organizer.username.charAt(0).toUpperCase()}
+                  </Avatar>
+                  <Stack >
+                    <Link to=''>
+                      <Typography variant="h6">{organizer.username}</Typography>
+                    </Link>
+                    <Rating value={4} readOnly precision={0.5} />
+                  </Stack>
                 </Stack>
-                <Grid container spacing={3} sx={{ pl: 4 }}>
-                  <Grid item xs={12} sm={6}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <CalendarTodayIcon color="action" />
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">Date</Typography>
-                        <Typography variant="body1">
-                          {new Date(event.date).toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <AccessTimeIcon color="action" />
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">Time</Typography>
-                        <Typography variant="body1">
-                          {new Date(event.date).toLocaleTimeString(undefined, { 
-                            hour: '2-digit', 
-                            minute: '2-digit', 
-                            hour12: false 
-                          })}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <AccessTimeIcon color="action" />
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">Duration</Typography>
-                        <Typography variant="body1">{event.duration} hours</Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <DirectionsRunIcon color="action" />
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">Difficulty</Typography>
-                        <Typography variant="body1">{event.difficultyLevel}</Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              </Box>
 
-              {/* Organizer Section */}
-              <Box>
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-                  <PersonIcon color="primary" />
-                  <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                    Organizer
-                  </Typography>
-                </Stack>
-                {organizer ? (
-                  <Box sx={{ pl: 4 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                      <Avatar 
-                        sx={{ 
-                          bgcolor: 'primary.main',
-                          width: 56,
-                          height: 56,
-                          fontSize: '1.5rem'
+                {/* Right Side: Sports Interests */}
+                <Box alignSelf="end" flex={1}>
+                  <Stack direction="row" justifyContent="end" spacing={1} flexWrap="wrap">
+                    {organizer.sportsInterests.map((sport, index) => (
+                      <Chip
+                        key={index}
+                        label={sport}
+                        size="small"
+                        sx={{
+                          bgcolor: 'background.paper',
+                          border: '1px solid',
+                          borderColor: 'divider',
+                          mb: 1,
                         }}
-                      >
-                        {organizer.username.charAt(0).toUpperCase()}
-                      </Avatar>
-                      <Box>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                          {organizer.username}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {organizer.age} years old • {organizer.gender}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Stack spacing={2}>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          Fitness Profile
-                        </Typography>
-                        <Stack direction="row" spacing={1}>
-                          <Chip 
-                            label={organizer.fitnessGoal} 
-                            color="primary" 
-                            variant="outlined" 
-                            size="small" 
-                          />
-                          <Chip 
-                            label={`${organizer.activityLevel} activity`} 
-                            color="secondary" 
-                            variant="outlined" 
-                            size="small" 
-                          />
-                        </Stack>
-                      </Box>
-                      <Box>
-                        <Typography variant="body2" color="text.secondary" gutterBottom>
-                          Sports Interests
-                        </Typography>
-                        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                          {organizer.sportsInterests.map((sport, index) => (
-                            <Chip 
-                              key={index}
-                              label={sport} 
-                              size="small"
-                              sx={{ 
-                                bgcolor: 'background.paper',
-                                border: '1px solid',
-                                borderColor: 'divider'
-                              }}
-                            />
-                          ))}
-                        </Stack>
-                      </Box>
-                    </Stack>
-                  </Box>
-                ) : (
-                  <Typography variant="body1" sx={{ pl: 4 }}>Loading organizer information...</Typography>
-                )}
-              </Box>
-            </Box>
-          </Grid>
-        </Grid>
+                      />
+                    ))}
+                  </Stack>
+                </Box>
+              </Stack>
+            ) : (
+              <Typography variant="body1" sx={{ pl: 4 }}>
+                Loading organizer info...
+              </Typography>
+            )}
+          </Box>
+        </Box>
       </Paper>
     </Box>
   );
+
 }
 
 export default EventDetails;

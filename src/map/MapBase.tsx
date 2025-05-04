@@ -101,7 +101,7 @@ function MapBase() {
                     left: 0,
                     width: "100vw",
                     height: "calc(100vh - 55px)",
-                    overflow: "hidden"
+                    overflow: "auto"
                 }}
                 mapStyle={`https://api.maptiler.com/maps/streets/style.json?key=${mapTilerKey}&language=he&fonts=Roboto,Arial,Open Sans`}
             >
