@@ -1,13 +1,30 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Card, CardContent, Typography, Grid, Divider, Box, Paper, Avatar, Chip, Stack, Rating } from '@mui/material';
+import { 
+  Card, 
+  CardContent, 
+  Typography, 
+  Grid, 
+  Divider, 
+  Box, 
+  Paper, 
+  Avatar, 
+  Chip, 
+  Stack, 
+  Rating,
+  Button,
+  Container,
+  Skeleton,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
 import { Event } from '../models/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
@@ -57,6 +74,8 @@ function EventDetails() {
   const [organizer, setOrganizer] = React.useState<User | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   React.useEffect(() => {
     async function getEventAndOrganizer() {
@@ -85,164 +104,346 @@ function EventDetails() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-        <Typography variant="h6" color="text.secondary">Loading event details...</Typography>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 2 }} />
+          <Skeleton variant="text" height={60} />
+          <Skeleton variant="text" height={40} />
+          <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 1 }} />
+        </Box>
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-        <Typography variant="h6" color="error">{error}</Typography>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            textAlign: 'center',
+            borderRadius: 2,
+            bgcolor: 'error.light',
+            color: 'error.dark'
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            {error}
+          </Typography>
+          <Button
+            component={Link}
+            to="/events"
+            variant="contained"
+            sx={{ mt: 2 }}
+          >
+            Back to Events
+          </Button>
+        </Paper>
+      </Container>
     );
   }
 
   if (!event) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
-        <Typography variant="h6" color="text.secondary">Event details not available.</Typography>
-      </Box>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            textAlign: 'center',
+            borderRadius: 2,
+            bgcolor: 'grey.100'
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Event details not available.
+          </Typography>
+          <Button
+            component={Link}
+            to="/events"
+            variant="contained"
+            sx={{ mt: 2 }}
+          >
+            Back to Events
+          </Button>
+        </Paper>
+      </Container>
     );
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: '1200px', margin: '0 auto' }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 } }}>
       <Paper
-        elevation={3}
+        elevation={2}
         sx={{
           borderRadius: 3,
           overflow: 'hidden',
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          minHeight: '500px',
+          bgcolor: 'background.paper',
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: 6
+          }
         }}
       >
-        {/* Left Image */}
-        <Box
-          sx={{
-            flex: 1,
-            height: { xs: '250px', md: 'auto' },
-            backgroundImage: `url(/HomeCards/${event.category.imageURL})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+        <Grid container>
+          {/* Left Image */}
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                position: 'relative',
+                height: { xs: '300px', md: '100%' },
+                minHeight: { md: '600px' },
+                backgroundImage: `url(/HomeCards/${event.category.imageURL})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)',
+                }
+              }}
+            />
+          </Grid>
 
-        {/* Right Details */}
-        <Box sx={{ flex: 1, p: { xs: 2, md: 4 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Title */}
-          <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-            {event.category.name} Event
-          </Typography>
-
-          {/* Location */}
-          <Box>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <LocationOnIcon color="primary" />
-              <Typography variant="subtitle1" color="text.secondary">Location</Typography>
-            </Stack>
-            <Typography variant="body1" sx={{ mt: 1, pl: 4 }}>
-              {event.address.addressLine1}
-              {event.address.addressLine2 && `, ${event.address.addressLine2}`}
-              <br />
-              {event.address.city}, {event.address.country}
-            </Typography>
-          </Box>
-
-          {/* Event Info */}
-          <Divider />
-          <Box>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-              <CalendarTodayIcon color="primary" />
-              <Typography variant="subtitle1" color="text.secondary">Event Information</Typography>
-            </Stack>
-            <Grid container spacing={2} sx={{ pl: 4 }}>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="body2" color="text.secondary">Date</Typography>
-                <Typography>
-                  {new Date(event.date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
+          {/* Right Details */}
+          <Grid item xs={12} md={6}>
+            <Box
+              sx={{
+                p: { xs: 2, sm: 3, md: 4 },
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3
+              }}
+            >
+              {/* Title & Category */}
+              <Box>
+                <Chip
+                  icon={<FitnessCenterIcon />}
+                  label={event.category.name}
+                  color="primary"
+                  sx={{ mb: 2 }}
+                />
+                <Typography 
+                  variant="h4" 
+                  sx={{ 
+                    fontWeight: 700,
+                    color: 'text.primary',
+                    mb: 1
+                  }}
+                >
+                  {event.category.name} Event
                 </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="body2" color="text.secondary">Time</Typography>
-                <Typography>
-                  {new Date(event.date).toLocaleTimeString(undefined, {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                  })}
+                <Typography 
+                  variant="subtitle1" 
+                  color="text.secondary"
+                  sx={{ mb: 2 }}
+                >
+                  Join us for an exciting {event.category.name.toLowerCase()} session!
                 </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="body2" color="text.secondary">Duration</Typography>
-                <Typography>{event.duration} hours</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="body2" color="text.secondary">Difficulty</Typography>
-                <Typography>{event.difficultyLevel}</Typography>
-              </Grid>
-            </Grid>
-          </Box>
+              </Box>
 
-          {/* Organizer */}
-          <Divider />
-          <Box>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-              <PersonIcon color="primary" />
-              <Typography variant="subtitle1" color="text.secondary">Organizer</Typography>
-            </Stack>
-            {organizer ? (
-              <Stack direction="row" spacing={4} sx={{ pl: 4, pt: 4 }} alignItems="flex-start" justifyContent="space-between">
-                {/* Left Side: Avatar, Name, Rating */}
-                <Stack direction="row" spacing={1} minWidth={150}>
-                  <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
-                    {organizer.username.charAt(0).toUpperCase()}
-                  </Avatar>
-                  <Stack >
-                    <Link to=''>
-                      <Typography variant="h6">{organizer.username}</Typography>
-                    </Link>
-                    <Rating value={4} readOnly precision={0.5} />
-                  </Stack>
+              {/* Location */}
+              <Box>
+                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                  <LocationOnIcon color="error" />
+                  <Typography variant="h6" color="text.primary">Location</Typography>
                 </Stack>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 2,
+                    bgcolor: 'grey.50',
+                    borderRadius: 2
+                  }}
+                >
+                  <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                    {event.address.addressLine1}
+                    {event.address.addressLine2 && <><br />{event.address.addressLine2}</>}
+                    <br />
+                    {event.address.city}, {event.address.country}
+                  </Typography>
+                </Paper>
+              </Box>
 
-                {/* Right Side: Sports Interests */}
-                <Box alignSelf="end" flex={1}>
-                  <Stack direction="row" justifyContent="end" spacing={1} flexWrap="wrap">
-                    {organizer.sportsInterests.map((sport, index) => (
-                      <Chip
-                        key={index}
-                        label={sport}
-                        size="small"
-                        sx={{
-                          bgcolor: 'background.paper',
-                          border: '1px solid',
-                          borderColor: 'divider',
-                          mb: 1,
-                        }}
-                      />
-                    ))}
-                  </Stack>
-                </Box>
-              </Stack>
-            ) : (
-              <Typography variant="body1" sx={{ pl: 4 }}>
-                Loading organizer info...
-              </Typography>
-            )}
-          </Box>
-        </Box>
+              {/* Event Info */}
+              <Box>
+                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                  <CalendarTodayIcon color="primary" />
+                  <Typography variant="h6" color="text.primary">Event Details</Typography>
+                </Stack>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: 'grey.50',
+                        borderRadius: 2,
+                        height: '100%'
+                      }}
+                    >
+                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                        Date & Time
+                      </Typography>
+                      <Typography variant="body1" color="text.primary">
+                        {new Date(event.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                        <br />
+                        {new Date(event.date).toLocaleTimeString(undefined, {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false,
+                        })}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 2,
+                        bgcolor: 'grey.50',
+                        borderRadius: 2,
+                        height: '100%'
+                      }}
+                    >
+                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                        Duration & Difficulty
+                      </Typography>
+                      <Typography variant="body1" color="text.primary">
+                        {event.duration} hours
+                        <br />
+                        Level {event.difficultyLevel}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              {/* Organizer */}
+              <Box>
+                <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
+                  <PersonIcon color="primary" />
+                  <Typography variant="h6" color="text.primary">Organizer</Typography>
+                </Stack>
+                {organizer ? (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      bgcolor: 'grey.50',
+                      borderRadius: 2
+                    }}
+                  >
+                    <Stack spacing={2}>
+                      {/* Top: Avatar and Name */}
+                      <Stack direction="row" spacing={2} alignItems="center">
+                        <Avatar
+                          sx={{
+                            width: 64,
+                            height: 64,
+                            bgcolor: 'primary.main',
+                            fontSize: '1.5rem'
+                          }}
+                        >
+                          {organizer.username.charAt(0).toUpperCase()}
+                        </Avatar>
+                        <Box>
+                          <Link
+                            to={`/profile/${organizer._id}`}
+                            style={{
+                              textDecoration: 'none',
+                              color: 'inherit'
+                            }}
+                          >
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                fontWeight: 600,
+                                '&:hover': {
+                                  color: 'primary.main'
+                                }
+                              }}
+                            >
+                              {organizer.username}
+                            </Typography>
+                          </Link>
+                          <Rating value={4} readOnly precision={0.5} size="small" />
+                        </Box>
+                      </Stack>
+
+                      {/* Bottom: Sports Interests */}
+                      <Box>
+                        <Typography 
+                          variant="subtitle2" 
+                          color="text.secondary" 
+                          sx={{ mb: 1 }}
+                        >
+                          Sports Interests
+                        </Typography>
+                        <Stack 
+                          direction="row" 
+                          spacing={1} 
+                          flexWrap="wrap"
+                          sx={{ 
+                            gap: 1
+                          }}
+                        >
+                          {organizer.sportsInterests.map((sport, index) => (
+                            <Chip
+                              key={index}
+                              label={sport}
+                              size="small"
+                              variant="outlined"
+                              sx={{
+                                bgcolor: 'background.paper',
+                                '&:hover': {
+                                  bgcolor: 'primary.light',
+                                  color: 'primary.contrastText'
+                                }
+                              }}
+                            />
+                          ))}
+                        </Stack>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                ) : (
+                  <Skeleton variant="rectangular" height={100} />
+                )}
+              </Box>
+
+              {/* Action Button */}
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  mt: 'auto',
+                  py: 1.5,
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontSize: '1.1rem'
+                }}
+              >
+                Join Event
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
       </Paper>
-    </Box>
+    </Container>
   );
-
 }
 
 export default EventDetails;
