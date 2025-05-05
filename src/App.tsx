@@ -11,6 +11,8 @@ import { ThemeProvider } from '@emotion/react'
 import theme from './theme/Theme'
 import AddEvent from './components/AddEvent'
 import ChatbotWidget from './components/ChatbotWidget'
+import CoachProfile from './components/CoachProfile'
+import Coaches from './components/Coaches'
 
 function App() {
   return (
@@ -21,11 +23,12 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/map" element={<MapBase />} />
-        <Route path="/coaches" element={<div >coaches</div>} />
+        <Route path="/coaches" element={<Coaches/>} />
         {/* <Route path="/chat" element={<Chatbot />} /> */}
         <Route path="/register" element={<StepperSignIn />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
         <Route path="/add-event" element={<AddEvent />} />
+        <Route path="/coaches/:coachId" element={<CoachProfile />} />
       </Routes>
       <ChatbotWidget />
     </ThemeProvider>

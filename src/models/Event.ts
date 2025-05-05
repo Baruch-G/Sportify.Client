@@ -1,3 +1,4 @@
+import { User } from "../components/CoachCard";
 import { Category } from "./Category";
 
 interface Address {
@@ -17,7 +18,7 @@ export interface Event {
     category: Category;
     duration: number;
     difficultyLevel: number;
-    organizer: string;
+    organizer: User;
     address: Address;
     location: Location;
     date: string;

@@ -54,24 +54,9 @@ async function fetchEventDetails(eventId: string) {
   }
 }
 
-async function fetchUserDetails(userId: string) {
-  try {
-    const response = await fetch(`${serverURL}/users/${userId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch user details');
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-    return null;
-  }
-}
-
 function EventDetails() {
   const { eventId } = useParams();
   const [event, setEvent] = React.useState<Event | undefined>(undefined);
-  const [organizer, setOrganizer] = React.useState<User | undefined>(undefined);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const theme = useTheme();
@@ -85,10 +70,6 @@ function EventDetails() {
         const eventData = await fetchEventDetails(eventId ?? "");
         if (eventData) {
           setEvent(eventData);
-          const userData = await fetchUserDetails(eventData.organizer);
-          if (userData) {
-            setOrganizer(userData);
-          }
         } else {
           setError('Event not found');
         }
@@ -193,8 +174,8 @@ function EventDetails() {
             <Box
               sx={{
                 position: 'relative',
-                height: { xs: '300px', md: '100%' },
-                minHeight: { md: '600px' },
+                height: { xs: '400px', md: '100%' },
+                minHeight: { md: '700' },
                 backgroundImage: `url(/HomeCards/${event.category.imageURL})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -230,23 +211,6 @@ function EventDetails() {
                   color="primary"
                   sx={{ mb: 2 }}
                 />
-                <Typography 
-                  variant="h4" 
-                  sx={{ 
-                    fontWeight: 700,
-                    color: 'text.primary',
-                    mb: 1
-                  }}
-                >
-                  {event.category.name} Event
-                </Typography>
-                <Typography 
-                  variant="subtitle1" 
-                  color="text.secondary"
-                  sx={{ mb: 2 }}
-                >
-                  Join us for an exciting {event.category.name.toLowerCase()} session!
-                </Typography>
               </Box>
 
               {/* Location */}
@@ -337,7 +301,7 @@ function EventDetails() {
                   <PersonIcon color="primary" />
                   <Typography variant="h6" color="text.primary">Organizer</Typography>
                 </Stack>
-                {organizer ? (
+                {event.organizer ? (
                   <Paper
                     elevation={0}
                     sx={{
@@ -357,11 +321,11 @@ function EventDetails() {
                             fontSize: '1.5rem'
                           }}
                         >
-                          {organizer.username.charAt(0).toUpperCase()}
+                          {event.organizer.username.charAt(0).toUpperCase()}
                         </Avatar>
                         <Box>
                           <Link
-                            to={`/profile/${organizer._id}`}
+                            to={`/coaches/${event.organizer._id}`}
                             style={{
                               textDecoration: 'none',
                               color: 'inherit'
@@ -376,7 +340,7 @@ function EventDetails() {
                                 }
                               }}
                             >
-                              {organizer.username}
+                              {event.organizer.username}
                             </Typography>
                           </Link>
                           <Rating value={4} readOnly precision={0.5} size="small" />
@@ -384,7 +348,7 @@ function EventDetails() {
                       </Stack>
 
                       {/* Bottom: Sports Interests */}
-                      <Box>
+                      {/* <Box>
                         <Typography 
                           variant="subtitle2" 
                           color="text.secondary" 
@@ -416,7 +380,7 @@ function EventDetails() {
                             />
                           ))}
                         </Stack>
-                      </Box>
+                      </Box> */}
                     </Stack>
                   </Paper>
                 ) : (
