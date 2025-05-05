@@ -6,8 +6,7 @@ import './Calendar.css'
 import { useEffect, useState, useRef } from 'react'
 import getEvents from '../../api/EventsApi'
 import { Event } from '../../models/Event'
-import EventCard from '../../components/EventCard'
-
+import EventCard from '../../components/EventCard/EventCard'
 const locales = {
   'en-US': enUS
 }
@@ -108,7 +107,7 @@ const MyCalendar = () => {
                 <div ref={selectedEventRef}>
                   <EventCard
                     event={selectedEvent}
-                    selected={selectedEvent._id}
+                    selected={selectedEvent?._id === selectedEvent._id}
                     onSelect={() => setSelectedEvent(null)}
                   />
                 </div>
@@ -119,7 +118,7 @@ const MyCalendar = () => {
                 <div key={event._id} ref={selectedEvent?._id === event._id ? selectedEventRef : null}>
                   <EventCard
                     event={event}
-                    selected={selectedEvent?._id}
+                    selected={selectedEvent?._id === event._id}
                     onSelect={() => setSelectedEvent(event)}
                   />
                 </div>
