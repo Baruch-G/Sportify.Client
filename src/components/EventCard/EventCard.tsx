@@ -24,31 +24,40 @@ const EventCard: React.FC<EventCardProps> = ({ event, selected, onSelect }) => {
     } : {};
 
     return (
-        <Paper style={{ cursor: 'pointer', ...selectedStyle }} onClick={() => onSelect?.(event)} elevation={2} sx={{ p: 2 }}>
+        <Paper
+            style={{
+            cursor: 'pointer',
+            ...selectedStyle,
+            borderLeft: `4px solid ${event.category.color}`, // Adding vertical line on the left
+            }}
+            onClick={() => onSelect?.(event)}
+            elevation={2}
+            sx={{ p: 2 }}
+        >
             <Typography variant="h6" gutterBottom>
-                {event.category.name}
+            {event.category.name}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-                📅 Date: {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}
+            📅 Date: {new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-                ⏱️ Duration: {event.duration} hours
+            ⏱️ Duration: {event.duration} hours
             </Typography>
             <Typography variant="body2" color="textSecondary">
-                📍 Location: {`${event.address.addressLine1}, ${event.address.city}`}
+            📍 Location: {`${event.address.addressLine1}, ${event.address.city}`}
             </Typography>
             <Typography variant="body2" sx={{ mt: 1 }}>
-                Difficulty Level: {event.difficultyLevel}
+            Difficulty Level: {event.difficultyLevel}
             </Typography>
             <Link to={`/events/${event._id}`}>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    sx={{ mt: 2 }}
-                >
-                    Register
-                </Button>
+            <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                sx={{ mt: 2 }}
+            >
+                Register
+            </Button>
             </Link>
         </Paper>
     );

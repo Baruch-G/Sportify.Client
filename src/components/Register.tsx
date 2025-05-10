@@ -6,7 +6,7 @@ import {
     StepIconProps, // Import StepIconProps
 } from '@mui/material';
 import { Check } from '@mui/icons-material';
-import SignIn from './SignIn';
+import SignUp from './SignUp';
 import SportsPreferencesSetup from './SportsPreferencesSetup';
 
 const steps = ['Sign In', 'Customization'];
@@ -39,7 +39,7 @@ function StepperSignIn() {
     return (
         <div>
             <div style={{ height: "700px" }}>
-                {activeStep === 0 && <SignIn onSubmit={() => setActiveStep(1)} />}
+                {activeStep === 0 && <SignUp onSubmit={() => setActiveStep(1)} />}
                 {activeStep === 1 && <SportsPreferencesSetup onSubmit={() => setActiveStep(1)} />}
             </div>
             <Stepper activeStep={activeStep} alternativeLabel>
