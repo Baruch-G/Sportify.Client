@@ -4,7 +4,7 @@ import { LargeAvatar } from './styles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import StarIcon from '@mui/icons-material/Star';
-import { User } from '../CoachCard';
+import { User } from '../../models/User';
 
 interface BasicInfoProps {
     userData: User;

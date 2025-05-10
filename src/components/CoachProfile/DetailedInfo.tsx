@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Box, Chip, Paper, Divider, Rating, Stack } from '@mui/material';
-import { User } from '../CoachCard';
+import { User } from '../../models/User';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';

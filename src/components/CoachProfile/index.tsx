@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import api from '../../services/api';
-import { Coach } from '../CoachCard';
+import { Coach } from '../../models/User';
 import { ProfilePaper } from './styles';
 import BasicInfo from './BasicInfo';
 import DetailedInfo from './DetailedInfo';

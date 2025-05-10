@@ -1,9 +1,9 @@
-import { User } from "../components/CoachCard";
+import { User } from "./User";
 import { Category } from "./Category";
 
 interface Address {
     addressLine1: string;
-    addressLine2?: string;
+    addressLine2?: string;  
     city: string;
     country: string;
 }
