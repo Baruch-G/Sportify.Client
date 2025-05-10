@@ -19,6 +19,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import { Event } from '../models/Event';
+import { User } from '../models/User';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -27,18 +28,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
-
-interface User {
-  _id: string;
-  username: string;
-  email: string;
-  age: number;
-  gender: string;
-  city: string;
-  fitnessGoal: string;
-  activityLevel: string;
-  sportsInterests: string[];
-}
 
 async function fetchEventDetails(eventId: string) {
   try {

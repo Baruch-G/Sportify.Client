@@ -1,32 +1,14 @@
 import React from 'react';
 import { Card, CardContent, Avatar, Box, Typography, Rating, Chip, Stack, IconButton } from '@mui/material';
 import { Event } from '../models/Event';
+import { User, Coach } from '../models/User';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import StarIcon from '@mui/icons-material/Star';
 import { motion } from 'framer-motion';
 
-export interface User {
-    _id: string;
-    username: string;
-    email: string;
-    password: string;
-    role: "user" | "admin";
-    createdAt: Date;
-    age: number;
-    wheight: number;
-    gender: "male" | "female";
-    addresse: string;
-    city: string;
-    height?: number;
-    fitnessGoal?: string;
-    activityLevel?: "low" | "moderate" | "high";
-    sportsInterests?: string[];
-    events?: Event[];
-}
-
 interface CoachCardProps {
-    coach: User;
+    coach: Coach;
     onClick: () => void;
 }
 

@@ -3,7 +3,8 @@ import { Box, Typography, Grid, Card, CardContent, Skeleton } from '@mui/materia
 import axios from 'axios';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import CoachCard, { Coach } from './CoachCard';
+import CoachCard from './CoachCard';
+import { Coach } from '../models/User';
 
 const Coaches: React.FC = () => {
     const [coaches, setCoaches] = useState<Coach[]>([]);
