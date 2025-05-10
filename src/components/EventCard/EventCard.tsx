@@ -17,9 +17,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, selected, onSelect }) => {
     }, [selected]);
 
     const selectedStyle = selected ? {
-        boxShadow: `0px 4px 8px ${theme.palette.primary.main}33`, // Using primary color with opacity
+        boxShadow: `0px 4px 8px ${event.category.color}33`, // Using primary color with opacity
         transform: "scale(1.02)",
-        borderLeft: `4px solid ${theme.palette.primary.main}`, // Using primary color
+        borderLeft: `4px solid ${event.category.color}`, // Using primary color
         transition: "all 0.3s ease-in-out", // Smooth hover effect
     } : {};
 

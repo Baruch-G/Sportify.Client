@@ -55,7 +55,7 @@ const CategoryHomeCard = (props: CategoryHomeCardProps) => {
                 <CardMedia
                     component="img"
                     height="200"
-                    image={"/HomeCards/" + props.sportKind.imageURL}
+                    image={props.sportKind.imageURL.startsWith("http") ? props.sportKind.imageURL :  "/HomeCards/" + props.sportKind.imageURL}
                     // image="/HomeCards//Football.webp"
                     alt={props.sportKind.name}
                     sx={{ 

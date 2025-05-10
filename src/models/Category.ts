@@ -5,4 +5,5 @@ export interface Category {
   imageURL: string;
   popularityScore?: number;
   difficultyLevel?: number;
+  color: string
 }

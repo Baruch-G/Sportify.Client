@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Grid, 
-  CircularProgress, 
-  Typography, 
+import {
+  Grid,
+  CircularProgress,
+  Typography,
   Box,
   FormControl,
   InputLabel,
@@ -81,7 +81,7 @@ function EventList() {
   const handleCategoryChange = (event: SelectChangeEvent) => {
     const newCategory = event.target.value;
     setCategoryFilter(newCategory);
-    
+
     // Update URL parameters
     if (newCategory) {
       setSearchParams({ category: newCategory });

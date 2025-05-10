@@ -13,6 +13,7 @@ import AddEvent from './components/AddEvent'
 import ChatbotWidget from './components/ChatbotWidget'
 import CoachProfile from './components/CoachProfile'
 import Coaches from './components/Coaches'
+import SignIn from './components/SignIn'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/coaches" element={<Coaches/>} />
         {/* <Route path="/chat" element={<Chatbot />} /> */}
         <Route path="/register" element={<StepperSignIn />} />
+        <Route path="/login" element={<SignIn  />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
         <Route path="/add-event" element={<AddEvent />} />
         <Route path="/coaches/:coachId" element={<CoachProfile />} />
