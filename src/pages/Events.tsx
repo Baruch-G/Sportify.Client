@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Grid, 
-  CircularProgress, 
-  Typography, 
+import {
+  Grid,
+  CircularProgress,
+  Typography,
   Box,
   FormControl,
   InputLabel,
@@ -81,7 +81,7 @@ function EventList() {
   const handleCategoryChange = (event: SelectChangeEvent) => {
     const newCategory = event.target.value;
     setCategoryFilter(newCategory);
-    
+
     // Update URL parameters
     if (newCategory) {
       setSearchParams({ category: newCategory });
@@ -148,7 +148,7 @@ function EventList() {
   if (error) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        <Typography variant="body1" color="error">Error: {error?.message || error}</Typography>
+        <Typography variant="body1" color="error">Error: {error}</Typography>
       </div>
     );
   }

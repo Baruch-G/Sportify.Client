@@ -143,13 +143,18 @@ const MyCalendar = () => {
           className="responsive-calendar"
           onSelectEvent={handleSelectEvent}
           selected={selectedEvent ? [selectedEvent] : []}
-          eventPropGetter={(event) => ({
-            className: event.selected ? 'selected-event' : '',
-            style: {
-              backgroundColor: event.selected ? '#1976d2' : undefined,
-              color: event.selected ? 'white' : undefined,
+          eventPropGetter={(event) => {
+            const categoryColor = event.resource.category.color;
+            return {
+              className: event.selected ? 'selected-event' : '',
+              style: {
+                '--event-color': categoryColor,
+                backgroundColor: event.selected ? categoryColor : 'transparent',
+                borderColor: categoryColor,
+                color: event.selected ? 'white' : categoryColor,
+              } as React.CSSProperties
             }
-          })}
+          }}
           views={isMobile ? ['week', 'day'] : ['month', 'week', 'day']}
           defaultView={isMobile ? 'week' : 'month'}
           date={date}
