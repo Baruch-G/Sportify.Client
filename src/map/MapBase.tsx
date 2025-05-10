@@ -10,6 +10,7 @@ import "./MapBase.css";
 import MapSideBar from '../components/MapSideBar';
 import mapboxgl from 'maplibre-gl';
 import { Event } from '../models/Event';
+import { useSearchParams } from 'react-router-dom';
 
 const mapTilerKey = import.meta.env.VITE_MAPTILER_KEY;
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
@@ -20,14 +21,23 @@ mapboxgl.setRTLTextPlugin(
 );
 
 function MapBase() {
-
+    const [searchParams] = useSearchParams();
     const [userPosition, setUserPosition] = useState<{ latitude: number; longitude: number } | null>(null);
     const [eventEntities, setEventEntities] = useState<Event[]>([]);
     const [selectedEvent, setSelectedEvent] = useState<string>();
-
     const mapRef = useRef<MapRef | null>(null);
+    const eventRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    const eventRefs = useRef<(HTMLDivElement | null)[]>([]); // Array of refs
+    // Get coordinates from URL parameters
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+
+    // Set initial view state based on URL parameters or user position
+    const initialViewState = {
+        longitude: lng ? parseFloat(lng) : (userPosition?.longitude || 34.77262),
+        latitude: lat ? parseFloat(lat) : (userPosition?.latitude || 31.99047),
+        zoom: lat && lng ? 15 : 12
+    };
 
     const setSelectFeature = (e: MapLayerMouseEvent) => {
         const map = mapRef.current?.getMap();
@@ -88,11 +98,7 @@ function MapBase() {
             <Map
                 id='EventMap'
                 ref={mapRef}
-                initialViewState={{
-                    longitude: userPosition?.longitude || 34.77262,
-                    latitude: userPosition?.latitude || 31.99047,
-                    zoom: 12
-                }}
+                initialViewState={initialViewState}
                 onClick={setSelectFeature}
                 localIdeographFontFamily="'Noto Sans', 'Noto Sans CJK SC', sans-serif"
                 style={{

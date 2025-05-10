@@ -10,7 +10,7 @@ const HomeCategoryList = () => {
     const [categories, setCategories] = useState<SportKind[]>();
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,9 +31,23 @@ const HomeCategoryList = () => {
 
     return (
         <div style={{ maxWidth: '1300px', margin: '0 auto' }}>
-            <Grid container spacing={3} justifyContent="center" style={isMobile ?  {  padding: '20px' } : {padding: '35px 70px 10px 70px'}}>
+            <Grid 
+                container 
+                spacing={3} 
+                justifyContent="center" 
+                style={isMobile ? { padding: '20px' } : { padding: '35px 70px 10px 70px' }}
+            >
                 {categories?.map((cat, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
+                    <Grid 
+                        item 
+                        xs={12} 
+                        sm={6} 
+                        md={4} 
+                        key={index}
+                        sx={{
+                            animation: `fadeIn 0.5s ease-out ${index * 0.1}s backwards`
+                        }}
+                    >
                         <RouterLink to={`/events?category=${cat._id}`} style={{ textDecoration: 'none' }}>
                             <CategoryHomeCard key={cat._id} sportKind={cat} />
                         </RouterLink>
@@ -46,11 +60,13 @@ const HomeCategoryList = () => {
                     component="button"
                     variant="body1"
                     onClick={() => {}}
+                    className="animated-button"
                     sx={{
                         color: 'text.secondary',
                         textDecoration: 'none',
                         '&:hover': {
-                            textDecoration: 'underline'
+                            textDecoration: 'none',
+                            color: 'primary.main'
                         }
                     }}
                 >
