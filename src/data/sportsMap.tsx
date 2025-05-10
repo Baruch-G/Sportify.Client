@@ -10,11 +10,15 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DownhillSkiingIcon from '@mui/icons-material/DownhillSkiing';
 import SportsBasketball from '@mui/icons-material/SportsBasketball';
 import { FaBoxTissue } from 'react-icons/fa';
+import SportsMartialArtsIcon from '@mui/icons-material/SportsMartialArts';
 import { GiBoxingGloveSurprise } from "react-icons/gi";
 import { GiHighKick } from "react-icons/gi";
 import { FaGolfBall } from "react-icons/fa";
-
-
+import { TbKarate } from "react-icons/tb";
+import GolfCourseIcon from '@mui/icons-material/GolfCourse';
+import SportsMmaIcon from '@mui/icons-material/SportsMma';
+import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+import SportsHockeyIcon from '@mui/icons-material/SportsHockey';
 export const sportToIconMap = {
     'running': <DirectionsRunIcon />,
     'dancing': <SportsKabaddiIcon />,
@@ -29,9 +33,11 @@ export const sportToIconMap = {
     'skiing': <DownhillSkiingIcon />,
     'table-tennis': <SportsTennisIcon />,
     'basketball': <SportsBasketball />,
-    'boxing': <GiBoxingGloveSurprise/>,
-    'martial-arts' : <GiHighKick/>,
-    'golf': <FaGolfBall />
+    'boxing': <SportsMmaIcon />,
+    'martial-arts' : <SportsMartialArtsIcon/>,
+    'golf': <GolfCourseIcon />,
+    'cricket': <SportsCricketIcon />,
+    'hockey': <SportsHockeyIcon />
 }
 
 

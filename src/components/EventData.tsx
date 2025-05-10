@@ -218,6 +218,15 @@ function EventDetails() {
                 <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1.5 }}>
                   <LocationOnIcon color="error" />
                   <Typography variant="h6" color="text.primary">Location</Typography>
+                  <Button
+                    component={Link}
+                    to={`/map?lat=${event.location.latitude}&lng=${event.location.longitude}`}
+                    size="small"
+                    startIcon={<LocationOnIcon />}
+                    sx={{ ml: 'auto' }}
+                  >
+                    View on Map
+                  </Button>
                 </Stack>
                 <Paper
                   elevation={0}

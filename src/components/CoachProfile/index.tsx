@@ -72,7 +72,7 @@ const CoachProfile: React.FC = () => {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container style={{maxWidth: '1300px'}} >
             <ProfilePaper elevation={3}>
                 <Grid container spacing={4}>
                     <BasicInfo userData={userData} />
