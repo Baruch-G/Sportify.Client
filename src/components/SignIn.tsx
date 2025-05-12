@@ -26,12 +26,19 @@ function SignIn() {
     const handleMouseDownPassword = (event: any) => {
         event.preventDefault();
     };
-
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-
-        fetch(`${serverURL}/users/login`, {
-
+    const [form, setForm] = useState<FormData>({ firstName: "",lastName: "",email: "",phone:"", password: "" });
+  
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+      const { name, value } = e.target;
+      setForm({ ...form, [name]: value });
+    }
+  
+    function handleSubmit(e: React.FormEvent) {
+      e.preventDefault();
+      console.log(form);
+    }
+    function fetchData(form:FormData) {
+        fetch('http://localhost:3000/users/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
