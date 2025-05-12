@@ -4,7 +4,7 @@ import Navbar from './components/Navbar'
 import Events from './pages/Events'
 import Calendar from './pages/calendar/Calendar'
 import MapBase from './map/MapBase'
-import StepperSignIn from './components/Register'
+import Register from './components/Register'
 import EventDetails from './components/EventData'
 import Home from './pages/Home'
 import { ThemeProvider } from '@emotion/react'
@@ -26,7 +26,7 @@ function App() {
         <Route path="/map" element={<MapBase />} />
         <Route path="/coaches" element={<Coaches/>} />
         {/* <Route path="/chat" element={<Chatbot />} /> */}
-        <Route path="/register" element={<StepperSignIn />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<SignIn  />} />
         <Route path="/events/:eventId" element={<EventDetails />} />
         <Route path="/add-event" element={<AddEvent />} />
