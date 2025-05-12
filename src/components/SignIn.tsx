@@ -20,7 +20,7 @@ function SignIn() {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        fetch(`${serverURL}users/login`, {
+        fetch(`${serverURL}/users/login`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
