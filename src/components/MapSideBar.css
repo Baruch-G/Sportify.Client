@@ -1,0 +1,26 @@
+#map-side-bar {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    width: 360px;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    height: 95%;
+    overflow-y: auto;
+    /* Allow scrolling */
+    overflow-y: scroll;
+  }
+  
+  /* Hide scrollbar */
+  #map-side-bar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  @media only screen and (max-width: 620px) {
+    #map-side-bar {
+      display: none;
+    }
+  }
+  
