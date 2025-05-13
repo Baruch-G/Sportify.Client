@@ -18,9 +18,11 @@ interface FormData {
     email: string;
 }
 
+const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+
 async function fetchData(form: FormData) {
 
-    fetch('http://localhost:3000/users/updateFavoritesSports', {
+    fetch(`${serverURL}/users/updateFavoritesSports`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

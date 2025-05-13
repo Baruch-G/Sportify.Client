@@ -12,6 +12,9 @@ import { ref } from "process";
 import { on } from "events";
 import { set } from "date-fns";
 import { get } from "http";
+
+const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+
 interface SignUpProps {
     onSubmit: (formData: FormData) => void;
 }
@@ -103,7 +106,7 @@ function SignUp({ onSubmit }: SignUpProps) {
         onSubmit(form);
     }
     function fetchData(form:FormData) {
-        fetch('http://localhost:3000/users/register', {
+        fetch(`${serverURL}/users/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

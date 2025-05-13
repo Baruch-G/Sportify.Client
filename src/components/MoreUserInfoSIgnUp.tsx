@@ -8,6 +8,8 @@ import { set } from "date-fns";
 import { Email } from "@mui/icons-material";
 import { error } from "console";
 
+const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+
 interface MoreInfoProps {
     email: string;
     onSubmit: () => void;
@@ -73,7 +75,7 @@ function MoreInfo({email, onSubmit }: MoreInfoProps) {
 
 async function fetchData(form: FormData) {
 
-        fetch('http://localhost:3000/users/update', {
+        fetch(`${serverURL}/users/update`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

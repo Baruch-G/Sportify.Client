@@ -5,9 +5,13 @@ import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useState } from "react";
+
+const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+
 interface SignInProps {
     onSubmit : () => void;
 }
+
 interface FormData {
     firstName: string;
     lastName: string;
@@ -15,7 +19,7 @@ interface FormData {
     phone: string;
     password: string;
   }
-  
+
 
 function SignIn() {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -38,7 +42,7 @@ function SignIn() {
       console.log(form);
     }
     function fetchData(form:FormData) {
-        fetch('http://localhost:3000/users/register', {
+        fetch(`${serverURL}/users/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
