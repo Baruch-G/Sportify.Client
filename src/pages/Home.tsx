@@ -105,23 +105,31 @@ const Home = () => {
                         Join sports events that match your passion and skill level
                     </Typography>
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        className="hero-button animated-button"
-                        sx={{
-                            px: 3.5,
-                            py: 1.2,
-                            fontSize: '1rem',
-                            transition: 'transform 0.2s',
-                            '&:hover': {
-                                transform: 'translateY(-2px)',
-                            },
+                    <Link 
+                        to="/events" 
+                        style={{ 
+                            textDecoration: 'none', 
+                            display: 'inline-block' 
                         }}
                     >
-                        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/events">FIND EVENTS</Link>
-                    </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                            className="hero-button animated-button"
+                            sx={{
+                                px: 3.5,
+                                py: 1.2,
+                                fontSize: '1rem',
+                                transition: 'transform 0.2s',
+                                '&:hover': {
+                                    transform: 'translateY(-2px)',
+                                },
+                            }}
+                        >
+                            FIND EVENTS
+                        </Button>
+                    </Link>
                 </Container>
             </Box>
             <HomeCategoryList />

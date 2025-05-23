@@ -1,216 +1,513 @@
-
-import { VisibilityOff, Visibility, Email } from "@mui/icons-material";
-import { Grid, Paper, Typography, TextField, InputAdornment, IconButton, Button } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import { VisibilityOff, Visibility, Email, CloudUpload } from "@mui/icons-material";
+import { 
+  Grid, 
+  Paper, 
+  Typography, 
+  TextField, 
+  InputAdornment, 
+  IconButton, 
+  Button,
+  Box,
+  CircularProgress,
+  Divider,
+  Alert,
+  useTheme,
+  alpha
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AppleIcon from '@mui/icons-material/Apple';
-import { useState } from "react";
-import { GoogleMap, useJsApiLoader ,StandaloneSearchBox} from '@react-google-maps/api'
-import { is } from "date-fns/locale";
-import { ref } from "process";
-import { on } from "events";
-import { set } from "date-fns";
-import { get } from "http";
+import { useAuth } from "../context/AuthContext";
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 
 interface SignUpProps {
-    onSubmit: (formData: FormData) => void;
+  onSubmit: (formData: FormData & { token: string }) => void;
 }
 
 interface FormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: number | null;
-    password: string;
-    address: string;
-    location: {
-        longitude: number|null,
-        latitude:  number|null,
-      },
-  }
-  
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: number | null;
+  password: string;
+  address: {
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    country: string;
+  };
+  location: {
+    longitude: number | null;
+    latitude: number | null;
+  };
+}
+
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  address?: {
+    addressLine1?: string;
+    city?: string;
+    country?: string;
+  };
+  location?: string;
+  submit?: string;
+}
 
 function SignUp({ onSubmit }: SignUpProps) {
-    //google api for autocompletion address
-    const inputref=useRef<any>(null);
-    const { isLoaded } = useJsApiLoader({
-      id: 'google-map-script',
-      googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-      libraries: ['places'],
-    })
-    
-    function getlocationofUser() {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            setForm((prev) => ({
-                ...prev,
-                location: { latitude, longitude }
-            }));
-        });
-    }
-    useEffect(() => {
-        getlocationofUser();
-    }, []);
-    
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [form, setForm] = useState<FormData>({ firstName: "",lastName: "",email: "",phone:null, password: "", address: "" ,location:{longitude:null,latitude: null}});
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event: any) => {
-        event.preventDefault();
+  const theme = useTheme();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [form, setForm] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: null,
+    password: "",
+    address: {
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      country: ""
+    },
+    location: { longitude: null, latitude: null }
+  });
+
+  const { user, logout, login} = useAuth();
+
+  const addressInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const loadAutocomplete = () => {
+      if (!window.google || !addressInputRef.current) return;
+
+      const autocomplete = new window.google.maps.places.Autocomplete(addressInputRef.current, {
+        types: ['geocode'],
+      });
+
+      autocomplete.setFields(['address_components', 'geometry']);
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        const getComponent = (type: string) =>
+          place.address_components?.find((c: google.maps.GeocoderAddressComponent) => c.types.includes(type))?.long_name || '';
+
+        const streetNumber = getComponent('street_number');
+        const route = getComponent('route');
+        const locality = getComponent('locality') || getComponent('sublocality') || getComponent('administrative_area_level_2');
+        const countryVal = getComponent('country');
+
+        setForm(prev => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            addressLine1: `${streetNumber} ${route}`.trim(),
+            city: locality,
+            country: countryVal,
+            addressLine2: prev.address.addressLine2 // Preserve existing address line 2
+          },
+          location: {
+            latitude: place.geometry?.location?.lat() || null,
+            longitude: place.geometry?.location?.lng() || null
+          }
+        }));
+      });
     };
 
-    const [emailError, setEmailError] = useState<string>("");
-    const[passwordError, setPasswordError] = useState<string>("");
+    if (!window.google) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=places&language=en`;
+      script.async = true;
+      script.onload = loadAutocomplete;
+      document.body.appendChild(script);
+    } else {
+      loadAutocomplete();
+    }
+  }, []);
+
+  const validateForm = (): boolean => {
+    const errors: FormErrors = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phonePattern = /^\+?[\d\s-]{10,}$/;
+
+    if (!form.firstName.trim()) errors.firstName = "First name is required";
+    if (!form.lastName.trim()) errors.lastName = "Last name is required";
+    if (!emailPattern.test(form.email)) errors.email = "Please enter a valid email address";
+    if (!phonePattern.test(form.phone?.toString() || "")) errors.phone = "Please enter a valid phone number";
+    if (form.password.length < 8) errors.password = "Password must be at least 8 characters";
     
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        
-      const { name, value } = e.target;
-      setForm({ ...form, [name]: value });
-      if (name === "email") {
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(value)) {
-                setEmailError("Email invalide");
-            } else {
-                setEmailError("");
-            }
-        }
-        if (name === "phone") {
-            setForm({ ...form, phone: value === "" ? null : Number(value) });
-        }
-        if (name==="password") {
-            if (value.length < 8) {
-                setPasswordError("Password must be at least 8 characters");
-            } else {
-                setPasswordError("");
-            }
-        }
+    // Address validation
+    if (!form.address.addressLine1.trim()) {
+      errors.address = { ...errors.address, addressLine1: "Address is required" };
     }
-  const [errorSubmitMessage, setErrorSubmitMessage] = useState<string>("");
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(form.email)) {
-            setEmailError("Email invalide");
-            return;
-        }
-        setEmailError("");
-        if(form.firstName && form.lastName && form.phone && form.password && form.address && form.password.length<8){
-            setErrorSubmitMessage("Please fill correctly all required fields.");
-            return;
-        }
-        fetchData(form);
-        onSubmit(form);
+    if (!form.address.city.trim()) {
+      errors.address = { ...errors.address, city: "City is required" };
     }
-    function fetchData(form:FormData) {
-        fetch(`${serverURL}/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(form),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-                console.log(response);
-            }
-            return response.json();
-        }
-        )
-        .then((data) => {
-            console.log('Success:', data);
-        }
-        )
-        .catch((error) => {
-            console.error('Error:', error);
-        }
-        );
+    if (!form.address.country.trim()) {
+      errors.address = { ...errors.address, country: "Country is required" };
     }
-    const handleOnPlacesChanged = () => {
-        const places = inputref.current.getPlaces();
-        if (places && places.length > 0) {
-            setForm({ ...form, address: places[0].formatted_address || places[0].name });
-        }
+    if (!form.location.latitude || !form.location.longitude) {
+      errors.location = "Please select a valid address from the sugges tions";
     }
-    return (
-        <form onSubmit={handleSubmit} >  
-        <Typography variant="h4" align="center" style={{ marginBottom: '16px' }}>Sign Up</Typography>
-                    <Grid container justifyContent="center" style={{ padding: '15px' }}>
-                        <Grid item xs={5} sm={0} style={{ padding: '16px' }}>
-                            <TextField label="First Name" required variant="outlined" fullWidth margin="normal" name="firstName" value={form.firstName}onChange={handleChange}/>
-                        </Grid>
-                        <Grid item xs={5} sm={0}style={{ padding: '16px' }}>
-                            <TextField label="Last Name"  required variant="outlined" fullWidth margin="normal" name="lastName" value={form.lastName}onChange={handleChange}/>
-                        </Grid>
-                    </Grid>
 
-                    <TextField label="Email" variant="outlined" fullWidth margin="normal" placeholder="example.email@gmail.com" name="email" value={form.email}onChange={handleChange } error={!!emailError}
-                helperText={emailError} required  />
-                    <TextField label="Phone Number" variant="outlined" fullWidth margin="normal" value={form.phone} name="phone" onChange={handleChange} required/>
-                    {isLoaded && 
-                        <StandaloneSearchBox onLoad={(ref) => inputref.current = ref} onPlacesChanged={handleOnPlacesChanged}>
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-                            <TextField label="Address" required variant="outlined" fullWidth margin="normal" value={form.address} name="address" onChange={handleChange}placeholder="Enter your Address"/>
-                        </StandaloneSearchBox>
-                    }
-                 
-                    <TextField
-                        label="Password"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        required
-                        onChange={handleChange}
-                        name="password"
-                        helperText={passwordError}
-                        value={form.password}
-                        type={showPassword ? 'text' : 'password'}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    {errorSubmitMessage && <Typography color="error" align="center">{errorSubmitMessage}</Typography>}
-                    <Button type="submit"variant="contained" fullWidth style={{ marginTop: '16px', backgroundColor : "#E5461D" }}> Next</Button>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    
+    if (name.startsWith('address.')) {
+      const field = name.split('.')[1];
+      setForm(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [field]: value
+        }
+      }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
 
-                    <Typography variant="body2" align="center" style={{ marginTop: '16px' }}>
-                        Or sign up with
-                    </Typography>
+    // Clear error when user starts typing
+    if (name.startsWith('address.')) {
+      const field = name.split('.')[1];
+      if (formErrors.address?.[field as keyof typeof formErrors.address]) {
+        setFormErrors(prev => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            [field]: undefined
+          }
+        }));
+      }
+    } else if (formErrors[name as keyof FormErrors]) {
+      setFormErrors(prev => ({ ...prev, [name]: undefined }));
+    }
+  };
 
-                    <Grid container justifyContent="center" spacing={2} style={{ marginTop: '8px' }}>
-                        <Grid item>
-                            <IconButton aria-label="google">
-                                <GoogleIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton aria-label="facebook">
-                                <FacebookIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton aria-label="apple">
-                                <AppleIcon />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-        </form>
-    );
+    setIsSubmitting(true);
+    try {
+      const userData = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+        address: form.address,
+        location: form.location
+      };
+
+      const response = await fetch(`${serverURL}/users/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const data = await response.json();
+
+      login(data);
+      onSubmit({ ...form, token: data.accessToken });
+    } catch (error: any) {
+      console.error('Error:', error);
+      setFormErrors(prev => ({
+        ...prev,
+        submit: error.message || "Registration failed. Please try again."
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const socialButtonStyle = {
+    width: '48px',
+    height: '48px',
+    backgroundColor: alpha(theme.palette.background.paper, 0.8),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.background.paper, 0.9),
+    },
+    transition: 'all 0.2s ease-in-out',
+  };
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        width: '100%',
+        maxWidth: 600,
+        mx: 'auto'
+      }}
+    >
+      <Typography 
+        variant="h4" 
+        align="center" 
+        sx={{ 
+          fontWeight: 700,
+          color: 'primary.main',
+          mb: 1
+        }}
+      >
+        Create Account
+      </Typography>
+
+      {formErrors.submit && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {formErrors.submit}
+        </Alert>
+      )}
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="First Name"
+            name="firstName"
+            value={form.firstName}
+            onChange={handleChange}
+            error={!!formErrors.firstName}
+            helperText={formErrors.firstName}
+            fullWidth
+            required
+            variant="outlined"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Last Name"
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            error={!!formErrors.lastName}
+            helperText={formErrors.lastName}
+            fullWidth
+            required
+            variant="outlined"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+          />
+        </Grid>
+      </Grid>
+
+      <TextField
+        label="Email"
+        name="email"
+        type="email"
+        value={form.email}
+        onChange={handleChange}
+        error={!!formErrors.email}
+        helperText={formErrors.email}
+        fullWidth
+        required
+        variant="outlined"
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Email color="action" />
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      <TextField
+        label="Phone Number"
+        name="phone"
+        type="tel"
+        value={form.phone || ''}
+        onChange={handleChange}
+        error={!!formErrors.phone}
+        helperText={formErrors.phone}
+        fullWidth
+        required
+        variant="outlined"
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+      />
+
+      <TextField
+        fullWidth
+        inputRef={addressInputRef}
+        name="ignore-address-autofill"
+        autoComplete="off"
+        label="Search Address"
+        margin="normal"
+        inputProps={{
+          autoComplete: 'new-password',
+          form: { autoComplete: 'off' },
+        }}
+        error={!!formErrors.location}
+        helperText={formErrors.location}
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+      />
+
+      <TextField
+        fullWidth
+        label="Address Line 1"
+        name="address.addressLine1"
+        value={form.address.addressLine1}
+        onChange={handleChange}
+        error={!!formErrors.address?.addressLine1}
+        helperText={formErrors.address?.addressLine1}
+        variant="outlined"
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+      />
+
+      <TextField
+        fullWidth
+        label="Address Line 2 (Optional)"
+        name="address.addressLine2"
+        value={form.address.addressLine2}
+        onChange={handleChange}
+        variant="outlined"
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+      />
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="City"
+            name="address.city"
+            value={form.address.city}
+            onChange={handleChange}
+            error={!!formErrors.address?.city}
+            helperText={formErrors.address?.city}
+            variant="outlined"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Country"
+            name="address.country"
+            value={form.address.country}
+            onChange={handleChange}
+            error={!!formErrors.address?.country}
+            helperText={formErrors.address?.country}
+            variant="outlined"
+            sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+          />
+        </Grid>
+      </Grid>
+
+      <TextField
+        label="Password"
+        name="password"
+        type={showPassword ? 'text' : 'password'}
+        value={form.password}
+        onChange={handleChange}
+        error={!!formErrors.password}
+        helperText={formErrors.password}
+        fullWidth
+        required
+        variant="outlined"
+        sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      <Button
+        type="submit"
+        variant="contained"
+        fullWidth
+        size="large"
+        disabled={isSubmitting}
+        sx={{
+          mt: 2,
+          py: 1.5,
+          borderRadius: 2,
+          fontWeight: 600,
+          fontSize: '1rem',
+          textTransform: 'none',
+          boxShadow: 2,
+          '&:hover': {
+            boxShadow: 4,
+          },
+        }}
+      >
+        {isSubmitting ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          'Create Account'
+        )}
+      </Button>
+
+      <Divider sx={{ my: 2 }}>
+        <Typography variant="body2" color="text.secondary">
+          Or continue with
+        </Typography>
+      </Divider>
+
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item>
+          <IconButton 
+            sx={{ 
+              border: 1, 
+              borderColor: 'divider',
+              '&:hover': { bgcolor: 'action.hover' }
+            }} 
+            aria-label="google"
+          >
+            <GoogleIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton 
+            sx={{ 
+              border: 1, 
+              borderColor: 'divider',
+              '&:hover': { bgcolor: 'action.hover' }
+            }} 
+            aria-label="facebook"
+          >
+            <FacebookIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton 
+            sx={{ 
+              border: 1, 
+              borderColor: 'divider',
+              '&:hover': { bgcolor: 'action.hover' }
+            }} 
+            aria-label="apple"
+          >
+            <AppleIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }
 
 export default SignUp;

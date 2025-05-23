@@ -1,24 +1,47 @@
 import { Event } from './Event';
+import { Category } from './Category';
+
+export type Role = "user" | "coach" | "admin";
 
 export interface User {
     _id: string;
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    role: "user" | "admin";
+    roles: Role[];
     createdAt: Date;
-    age: number;
     wheight: number;
     gender: "male" | "female";
-    addresse: string;
+    address: {
+        addressLine1: string;
+        addressLine2?: string;
+        city: string;
+        country: string;
+      };
+    birthDay: Date;
     city: string;
     height?: number;
     fitnessGoal?: string;
-    activityLevel?: "low" | "moderate" | "high";
-    sportsInterests?: string[];
+    activityLevel?: "sedentary" | "lightly active" | "moderately active" | "very active" | "extra active" | "athlete" | "bodybuilder";
+    sportsInterests?: Category[];
     events?: Event[];
+    image?: string;
+    phone: string;
+    phoneNumber?: string;
+}
+
+interface CoachProfile {
+    aboutMe?: string;
+    coachingStartDate?: Date;
+    specializations?: Category[];
+    certifications?: string[];
+    coachingStyle?: string;
+    hourlyRate?: number;
+    languages?: string[];
+    achievements?: string[];
 }
 
 export interface Coach extends User {
-    rating: number;
+    coachProfile: CoachProfile;
 } 
