@@ -1,69 +1,85 @@
 import React from 'react';
-import {Stepper,Step,StepLabel,StepIconProps,Paper} from '@mui/material';
+import { Stepper, Step, StepLabel, StepIconProps, Paper, Box } from '@mui/material';
 import { Check } from '@mui/icons-material';
 import SignUp from './SignUp';
 import SportsPreferencesSetup from './SportsPreferencesSetup';
 import MoreInfo from './MoreUserInfoSIgnUp';
-const steps = ['Sign In','More Info' ,'Customization'];
+import ProfileImageUpload from './ProfileImageUpload';
+const steps = ['Sign In', 'More Info', 'Profile Photo', 'Customization'];
 import { useNavigate } from "react-router-dom";
-
-const CustomIcon: React.FC<StepIconProps> = ({ active, completed, icon, error }) => { // Change to StepIconProps
-    const contents = completed ? <Check fontSize="inherit" /> : icon;
-   
-    return (
-        <div
-            style={{
-                backgroundColor: active || completed ? "#E5461D" : "gray",
-                color: "white",
-                minHeight: "35px",
-                minWidth: "35px",
-                borderRadius: "50%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "5px",
-                fontSize: "1rem",
-            }}
-        >
-            {contents}
-        </div>
-    );
-};
+import { useTheme } from '@mui/material/styles';
 
 function StepperSignIn() {
     const [activeStep, setActiveStep] = React.useState(0);
     const [email, setEmail] = React.useState("");
+    const [token, setToken] = React.useState("");
     const navigate = useNavigate();
+    const theme = useTheme();
+
     return (
-        <div
-            style={{
+        <Box
+            sx={{
                 minHeight: "100vh",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "#f5f5f5"
+                bgcolor: "background.default",
+                py: 4
             }}
         >
-            <Paper elevation={3} style={{ padding: 32, maxWidth: 800, width: "100%", margin: 24 }}>
-                <div style={{ display: "flex", flexDirection: "column", minHeight: 600 }}>
-                    <div style={{ flex: 1 }}>
-                        {activeStep === 0 && <SignUp  onSubmit={(formData) => {
-                                    setEmail(formData.email);
-                                    setActiveStep(1);
-                                }} />}
-                        {activeStep === 1 && <MoreInfo email ={email} onSubmit={() => setActiveStep(2) } />}
-                        {activeStep === 2 && <SportsPreferencesSetup email ={email} onSubmit={() => navigate("/") }/>}
-                    </div>
-                    <Stepper activeStep={activeStep} alternativeLabel style={{ marginTop: "auto" }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    p: { xs: 2, sm: 4 },
+                    maxWidth: 800,
+                    width: "100%",
+                    mx: { xs: 2, sm: 4 },
+                    borderRadius: 2
+                }}
+            >
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: { xs: "auto", sm: 600 },
+                    gap: 4
+                }}>
+                    <Box sx={{ flex: 1 }}>
+                        {activeStep === 0 && <SignUp onSubmit={(formData) => {
+                            setEmail(formData.email);
+                            setToken(formData.token);
+                            setActiveStep(1);
+                        }} />}
+                        {activeStep === 1 && <SportsPreferencesSetup email={email} onSubmit={() => setActiveStep(2)} />}
+                        {activeStep === 2 && (
+                            <ProfileImageUpload
+                                token={token}
+                                onSubmit={(imageUrl?: string) => {
+                                    setActiveStep(3);
+                                }}
+                            />
+                        )}
+                        {activeStep === 3 && <MoreInfo email={email} onSubmit={() => navigate("/")} />}
+                    </Box>
+
+                    <Stepper
+                        activeStep={activeStep}
+                        alternativeLabel
+                        sx={{
+                            mt: "auto",
+                            pt: 2,
+                            borderTop: 1,
+                            borderColor: "divider"
+                        }}
+                    >
                         {steps.map((label) => (
                             <Step key={label}>
-                                <StepLabel StepIconComponent={CustomIcon} sx={{ color: 'red' }}>{label}</StepLabel>
+                                <StepLabel>{label}</StepLabel>
                             </Step>
                         ))}
                     </Stepper>
-                </div>
+                </Box>
             </Paper>
-        </div>
+        </Box>
     );
 }
 

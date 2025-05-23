@@ -13,6 +13,7 @@ interface CoachCardProps {
 }
 
 const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
+    const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
     return (
         <motion.div
             whileHover={{ scale: 1.02 }}
@@ -35,8 +36,8 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                 <CardContent sx={{ p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <Avatar
-                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${coach.username}`}
-                            alt={coach.username}
+                            src={ coach.image ? `${serverURL}${coach.image}` : `${serverURL}/uploads/profile-images/default-avatar.jpg`}
+                            alt={coach.firstName + coach.lastName}
                             sx={{ 
                                 width: 64, 
                                 height: 64, 
@@ -47,7 +48,7 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                         />
                         <Box>
                             <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-                                {coach.username}
+                                {`${coach.firstName} ${coach.lastName}`}
                             </Typography>
                             <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
                                 <Chip
@@ -73,10 +74,10 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                             Specializations
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {coach.sportsInterests?.slice(0, 3).map((sport, index) => (
+                            {coach.coachProfile.specializations?.slice(0, 3).map((sport, index) => (
                                 <Chip
                                     key={index}
-                                    label={sport.charAt(0).toUpperCase() + sport.slice(1)}
+                                    label={sport.name.charAt(0).toUpperCase() + sport.name.slice(1)}
                                     size="small"
                                     color="primary"
                                     variant="outlined"

@@ -17,6 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import { FaHome, FaCalendarAlt, FaMapMarkedAlt, FaUserFriends, FaRunning } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 interface NavItem {
   title: string;
@@ -39,12 +40,14 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+  const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
   const handleAvatarClick = (event: MouseEvent<HTMLElement>) => setMenuAnchor(event.currentTarget);
   const handleMenuClose = () => setMenuAnchor(null);
   const handleMobileMenuClick = (event: MouseEvent<HTMLElement>) => setMobileMenuAnchor(event.currentTarget);
   const handleMobileMenuClose = () => setMobileMenuAnchor(null);
   const isActive = (path: string) => location.pathname === path;
+
+  const { user, logout } = useAuth();
 
   return (
     <AppBar
@@ -102,11 +105,14 @@ const Navbar: React.FC = () => {
 
           {/* Right side: auth buttons or avatar */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Replace false with actual authentication logic */}
-            {false ? (
+            {user?.id ? (
               <>
                 <IconButton onClick={handleAvatarClick}>
-                  <Avatar src="/avatar.jfif" />
+                  <Avatar 
+                    src={user.image ? `${serverURL}${user.image}` : `${serverURL}/uploads/profile-images/default-avatar.jpg`}
+                    alt={`${user.firstName} ${user.lastName}`}
+                    sx={{ width: 40, height: 40 }}
+                  />
                 </IconButton>
                 <Menu
                   anchorEl={menuAnchor}
@@ -116,8 +122,14 @@ const Navbar: React.FC = () => {
                     sx: { mt: 1.5, borderRadius: '8px' }
                   }}
                 >
-                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                  <MenuItem onClick={() => {
+                    handleMenuClose();
+                    navigate('/profile');
+                  }}>Profile</MenuItem>
+                  <MenuItem onClick={() => {
+                    handleMenuClose();
+                    logout();
+                  }}>Sign Out</MenuItem>
                 </Menu>
               </>
             ) : (

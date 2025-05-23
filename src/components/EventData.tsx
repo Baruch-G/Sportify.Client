@@ -319,7 +319,7 @@ function EventDetails() {
                             fontSize: '1.5rem'
                           }}
                         >
-                          {event.organizer.username.charAt(0).toUpperCase()}
+                          {event.organizer.firstName.charAt(0).toUpperCase()}
                         </Avatar>
                         <Box>
                           <Link
@@ -338,7 +338,7 @@ function EventDetails() {
                                 }
                               }}
                             >
-                              {event.organizer.username}
+                              {event.organizer.firstName + " " + event.organizer.lastName}
                             </Typography>
                           </Link>
                           <Rating value={4} readOnly precision={0.5} size="small" />
