@@ -76,7 +76,7 @@ const ProfileEdit: React.FC = () => {
                     email: userResponse.data.email,
                     gender: userResponse.data.gender,
                     birthDay: userResponse.data.birthDay,
-                    wheight: userResponse.data.wheight.toString(),
+                    wheight: userResponse.data.wheight?.toString() || '',
                     height: userResponse.data.height?.toString() || '', 
                     address: {
                         addressLine1: userResponse.data.address.addressLine1,
@@ -92,6 +92,7 @@ const ProfileEdit: React.FC = () => {
                 
                 setError(null);
             } catch (err: any) {
+                console.log(err);
                 setError(err.response?.data?.message || 'Failed to fetch data');
             } finally {
                 setLoading(false);

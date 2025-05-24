@@ -20,7 +20,6 @@ export interface User {
         country: string;
       };
     birthDay: Date;
-    city: string;
     height?: number;
     fitnessGoal?: string;
     activityLevel?: "sedentary" | "lightly active" | "moderately active" | "very active" | "extra active" | "athlete" | "bodybuilder";

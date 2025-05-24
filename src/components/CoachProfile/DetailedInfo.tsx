@@ -14,8 +14,8 @@ interface DetailedInfoProps {
 
 const DetailedInfo: React.FC<DetailedInfoProps> = ({ userData }) => {
     return (
-        <Grid item xs={12} md={8}>
-            <Paper sx={{ p: 3, borderRadius: 3 }}>
+        <Grid item xs={12} md={8} sx={{ height: '100%' }}>
+            <Paper sx={{ p: 3, borderRadius: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
                     About Me
                 </Typography>

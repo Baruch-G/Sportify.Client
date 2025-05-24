@@ -61,7 +61,7 @@ const Coaches: React.FC = () => {
     }
 
     return (
-        <Box sx={{ padding: 3 }}>
+        <Box sx={{ padding: 3, margin: '30px', maxWidth: '1300px', marginLeft: 'auto', marginRight: 'auto' }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Our Coaches
             </Typography>

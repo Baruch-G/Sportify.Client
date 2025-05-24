@@ -247,35 +247,99 @@ const Profile: React.FC = () => {
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+            <Paper 
+                elevation={3} 
+                sx={{ 
+                    p: { xs: 2, md: 4 }, 
+                    borderRadius: 3,
+                    background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+                }}
+            >
                 <Grid container spacing={4}>
                     {/* Profile Header */}
                     <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-                        <Avatar
-                            src={userData.image ? `${serverURL}${userData.image}` : undefined}
-                            alt={`${userData.firstName} ${userData.lastName}`}
-                            sx={{
-                                width: 200,
-                                height: 200,
-                                mx: 'auto',
-                                mb: 2,
-                                border: '4px solid',
-                                borderColor: 'primary.main'
+                        <Box sx={{ position: 'relative', display: 'inline-block' }}>
+                            <Avatar
+                                src={userData.image ? `${serverURL}${userData.image}` : undefined}
+                                alt={`${userData.firstName} ${userData.lastName}`}
+                                sx={{
+                                    width: { xs: 150, md: 200 },
+                                    height: { xs: 150, md: 200 },
+                                    mx: 'auto',
+                                    mb: 2,
+                                    border: '4px solid',
+                                    borderColor: 'primary.main',
+                                    boxShadow: '0 4px 12px rgba(227, 113, 39, 0.2)',
+                                    transition: 'transform 0.3s ease-in-out',
+                                    '&:hover': {
+                                        transform: 'scale(1.02)'
+                                    }
+                                }}
+                            />
+                            {userData.roles.includes('coach') && (
+                                <Chip
+                                    label="Professional Coach"
+                                    color="primary"
+                                    sx={{
+                                        position: 'absolute',
+                                        bottom: 16,
+                                        right: -8,
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 2px 8px rgba(227, 113, 39, 0.2)'
+                                    }}
+                                />
+                            )}
+                        </Box>
+                        <Typography 
+                            variant="h4" 
+                            gutterBottom 
+                            sx={{ 
+                                fontWeight: 800,
+                                background: 'linear-gradient(45deg, #e37127 30%, #e37243 90%)',
+                                backgroundClip: 'text',
+                                textFillColor: 'transparent',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                mb: 1
                             }}
-                        />
-                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+                        >
                             {userData.firstName} {userData.lastName}
                         </Typography>
-                        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                        <Typography 
+                            variant="subtitle1" 
+                            color="text.secondary" 
+                            gutterBottom
+                            sx={{ mb: 3 }}
+                        >
                             {userData.roles.includes('coach') ? 'Professional Coach' : 'Sports Enthusiast'}
                         </Typography>
                         
-                        <Stack direction="row" spacing={2} sx={{ mt: 2, justifyContent: 'center' }}>
+                        <Stack 
+                            direction={{ xs: 'column', sm: 'row' }} 
+                            spacing={2} 
+                            sx={{ 
+                                justifyContent: 'center',
+                                '& .MuiButton-root': {
+                                    minWidth: { xs: '100%', sm: 'auto' },
+                                    px: 3,
+                                    py: 1.5,
+                                    borderRadius: 2,
+                                    fontWeight: 600,
+                                    textTransform: 'none',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                                    '&:hover': {
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                        transform: 'translateY(-2px)'
+                                    },
+                                    transition: 'all 0.3s ease-in-out'
+                                }
+                            }}
+                        >
                             <Button
                                 variant="contained"
                                 startIcon={<EditIcon />}
                                 onClick={handleEditProfile}
-                                sx={{ borderRadius: 2 }}
                             >
                                 Edit Profile
                             </Button>
@@ -284,7 +348,12 @@ const Profile: React.FC = () => {
                                     variant="outlined"
                                     startIcon={<SportsHandballIcon />}
                                     onClick={handleBecomeCoach}
-                                    sx={{ borderRadius: 2 }}
+                                    sx={{
+                                        borderWidth: 2,
+                                        '&:hover': {
+                                            borderWidth: 2
+                                        }
+                                    }}
                                 >
                                     Become a Coach
                                 </Button>
@@ -294,141 +363,293 @@ const Profile: React.FC = () => {
 
                     {/* Profile Details */}
                     <Grid item xs={12} md={8}>
-                        <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
+                        <Typography 
+                            variant="h5" 
+                            gutterBottom 
+                            sx={{ 
+                                fontWeight: 800,
+                                mb: 4,
+                                color: 'text.primary',
+                                position: 'relative',
+                                '&:after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: -8,
+                                    left: 0,
+                                    width: 60,
+                                    height: 4,
+                                    backgroundColor: 'primary.main',
+                                    borderRadius: 2
+                                }
+                            }}
+                        >
                             Profile Information
                         </Typography>
 
-                        <Grid container spacing={3}>
+                        <Grid container spacing={4}>
                             {/* Personal Information */}
                             <Grid item xs={12}>
-                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                    Personal Information
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Age
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {userData.birthDay ? new Date().getFullYear() - new Date(userData.birthDay).getFullYear() : 0} years
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Gender
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {userData.gender.charAt(0).toUpperCase() + userData.gender.slice(1)}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography variant="subtitle2" color="text.secondary">
-                                            Weight
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            {userData.wheight} kg
-                                        </Typography>
-                                    </Grid>
-                                    {userData.height && (
+                                <Paper 
+                                    elevation={0} 
+                                    sx={{ 
+                                        p: 3, 
+                                        borderRadius: 2,
+                                        bgcolor: 'background.paper',
+                                        border: '1px solid',
+                                        borderColor: 'divider'
+                                    }}
+                                >
+                                    <Typography 
+                                        variant="h6" 
+                                        gutterBottom 
+                                        sx={{ 
+                                            fontWeight: 700,
+                                            color: 'primary.main',
+                                            mb: 2
+                                        }}
+                                    >
+                                        Personal Information
+                                    </Typography>
+                                    <Grid container spacing={3}>
                                         <Grid item xs={12} sm={6}>
-                                            <Typography variant="subtitle2" color="text.secondary">
-                                                Height
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {userData.height} cm
-                                            </Typography>
+                                            <Box sx={{ 
+                                                p: 2, 
+                                                borderRadius: 2,
+                                                bgcolor: 'background.default',
+                                                height: '100%'
+                                            }}>
+                                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                    Age
+                                                </Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                    {userData.birthDay ? new Date().getFullYear() - new Date(userData.birthDay).getFullYear() : 0} years
+                                                </Typography>
+                                            </Box>
                                         </Grid>
-                                    )}
-                                </Grid>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Divider sx={{ my: 2 }} />
+                                        <Grid item xs={12} sm={6}>
+                                            <Box sx={{ 
+                                                p: 2, 
+                                                borderRadius: 2,
+                                                bgcolor: 'background.default',
+                                                height: '100%'
+                                            }}>
+                                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                    Gender
+                                                </Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                    {userData.gender?.charAt(0).toUpperCase() + userData.gender?.slice(1)}
+                                                </Typography>
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <Box sx={{ 
+                                                p: 2, 
+                                                borderRadius: 2,
+                                                bgcolor: 'background.default',
+                                                height: '100%'
+                                            }}>
+                                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                    Weight
+                                                </Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                    {userData.wheight} kg
+                                                </Typography>
+                                            </Box>
+                                        </Grid>
+                                        {userData.height && (
+                                            <Grid item xs={12} sm={6}>
+                                                <Box sx={{ 
+                                                    p: 2, 
+                                                    borderRadius: 2,
+                                                    bgcolor: 'background.default',
+                                                    height: '100%'
+                                                }}>
+                                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                        Height
+                                                    </Typography>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                        {userData.height} cm
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </Paper>
                             </Grid>
 
                             {/* Contact Information */}
                             <Grid item xs={12}>
-                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                    Contact Information
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12}>
-                                        <Stack direction="row" spacing={1} alignItems="center">
-                                            <EmailIcon color="action" />
-                                            <Typography variant="body1">
+                                <Paper 
+                                    elevation={0} 
+                                    sx={{ 
+                                        p: 3, 
+                                        borderRadius: 2,
+                                        bgcolor: 'background.paper',
+                                        border: '1px solid',
+                                        borderColor: 'divider'
+                                    }}
+                                >
+                                    <Typography 
+                                        variant="h6" 
+                                        gutterBottom 
+                                        sx={{ 
+                                            fontWeight: 700,
+                                            color: 'primary.main',
+                                            mb: 2
+                                        }}
+                                    >
+                                        Contact Information
+                                    </Typography>
+                                    <Stack spacing={2}>
+                                        <Box sx={{ 
+                                            display: 'flex', 
+                                            alignItems: 'center',
+                                            p: 2,
+                                            borderRadius: 2,
+                                            bgcolor: 'background.default',
+                                            transition: 'all 0.2s ease-in-out',
+                                            '&:hover': {
+                                                bgcolor: 'action.hover'
+                                            }
+                                        }}>
+                                            <EmailIcon sx={{ color: 'primary.main', mr: 2 }} />
+                                            <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                                 {userData.email}
                                             </Typography>
-                                        </Stack>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Stack direction="row" spacing={1} alignItems="center">
-                                            <LocationOnIcon color="action" />
-                                            <Typography variant="body1">
+                                        </Box>
+                                        <Box sx={{ 
+                                            display: 'flex', 
+                                            alignItems: 'center',
+                                            p: 2,
+                                            borderRadius: 2,
+                                            bgcolor: 'background.default',
+                                            transition: 'all 0.2s ease-in-out',
+                                            '&:hover': {
+                                                bgcolor: 'action.hover'
+                                            }
+                                        }}>
+                                            <LocationOnIcon sx={{ color: 'primary.main', mr: 2 }} />
+                                            <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                                 {userData.address.addressLine1}, {userData.address.city}
                                             </Typography>
-                                        </Stack>
-                                    </Grid>
-                                    {userData.phoneNumber && (
-                                        <Grid item xs={12}>
-                                            <Stack direction="row" spacing={1} alignItems="center">
-                                                <PhoneIcon color="action" />
-                                                <Typography variant="body1">
+                                        </Box>
+                                        {userData.phoneNumber && (
+                                            <Box sx={{ 
+                                                display: 'flex', 
+                                                alignItems: 'center',
+                                                p: 2,
+                                                borderRadius: 2,
+                                                bgcolor: 'background.default',
+                                                transition: 'all 0.2s ease-in-out',
+                                                '&:hover': {
+                                                    bgcolor: 'action.hover'
+                                                }
+                                            }}>
+                                                <PhoneIcon sx={{ color: 'primary.main', mr: 2 }} />
+                                                <Typography variant="body1" sx={{ fontWeight: 500 }}>
                                                     {userData.phoneNumber}
                                                 </Typography>
-                                            </Stack>
-                                        </Grid>
-                                    )}
-                                </Grid>
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Divider sx={{ my: 2 }} />
+                                            </Box>
+                                        )}
+                                    </Stack>
+                                </Paper>
                             </Grid>
 
                             {/* Fitness Information */}
                             <Grid item xs={12}>
-                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                    Fitness Information
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {userData.fitnessGoal && (
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="subtitle2" color="text.secondary">
-                                                Fitness Goal
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {userData.fitnessGoal}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                    {userData.activityLevel && (
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="subtitle2" color="text.secondary">
-                                                Activity Level
-                                            </Typography>
-                                            <Typography variant="body1">
-                                                {userData.activityLevel.charAt(0).toUpperCase() + userData.activityLevel.slice(1)}
-                                            </Typography>
-                                        </Grid>
-                                    )}
-                                    {userData.sportsInterests && userData.sportsInterests.length > 0 && (
-                                        <Grid item xs={12}>
-                                            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                                                Sports Interests
-                                            </Typography>
-                                            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                                                {userData.sportsInterests.map((sport, index) => (
-                                                    <Chip
-                                                        key={index}
-                                                        icon={<FitnessCenterIcon />}
-                                                        label={sport.name}
-                                                        sx={{ mb: 1 }}
-                                                    />
-                                                ))}
-                                            </Stack>
-                                        </Grid>
-                                    )}
-                                </Grid>
+                                <Paper 
+                                    elevation={0} 
+                                    sx={{ 
+                                        p: 3, 
+                                        borderRadius: 2,
+                                        bgcolor: 'background.paper',
+                                        border: '1px solid',
+                                        borderColor: 'divider'
+                                    }}
+                                >
+                                    <Typography 
+                                        variant="h6" 
+                                        gutterBottom 
+                                        sx={{ 
+                                            fontWeight: 700,
+                                            color: 'primary.main',
+                                            mb: 2
+                                        }}
+                                    >
+                                        Fitness Information
+                                    </Typography>
+                                    <Grid container spacing={3}>
+                                        {userData.fitnessGoal && (
+                                            <Grid item xs={12} sm={6}>
+                                                <Box sx={{ 
+                                                    p: 2, 
+                                                    borderRadius: 2,
+                                                    bgcolor: 'background.default',
+                                                    height: '100%'
+                                                }}>
+                                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                        Fitness Goal
+                                                    </Typography>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                        {userData.fitnessGoal}
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                        {userData.activityLevel && (
+                                            <Grid item xs={12} sm={6}>
+                                                <Box sx={{ 
+                                                    p: 2, 
+                                                    borderRadius: 2,
+                                                    bgcolor: 'background.default',
+                                                    height: '100%'
+                                                }}>
+                                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                        Activity Level
+                                                    </Typography>
+                                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                                        {userData.activityLevel.charAt(0).toUpperCase() + userData.activityLevel.slice(1)}
+                                                    </Typography>
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                        {userData.sportsInterests && userData.sportsInterests.length > 0 && (
+                                            <Grid item xs={12}>
+                                                <Box sx={{ 
+                                                    p: 2, 
+                                                    borderRadius: 2,
+                                                    bgcolor: 'background.default'
+                                                }}>
+                                                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                                        Sports Interests
+                                                    </Typography>
+                                                    <Stack 
+                                                        direction="row" 
+                                                        spacing={1} 
+                                                        flexWrap="wrap" 
+                                                        useFlexGap
+                                                        sx={{ mt: 1 }}
+                                                    >
+                                                        {userData.sportsInterests.map((sport, index) => (
+                                                            <Chip
+                                                                key={index}
+                                                                icon={<FitnessCenterIcon />}
+                                                                label={sport.name}
+                                                                sx={{ 
+                                                                    mb: 1,
+                                                                    fontWeight: 500,
+                                                                    '& .MuiChip-icon': {
+                                                                        color: 'primary.main'
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ))}
+                                                    </Stack>
+                                                </Box>
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </Paper>
                             </Grid>
                         </Grid>
                     </Grid>
