@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Button, Chip, Stack, Rating } from '@mui/material';
+import { Grid, Box, Typography, Button, Chip, Stack, Rating, Paper } from '@mui/material';
 import { LargeAvatar } from './styles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -28,16 +28,8 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ userData }) => {
     };
 
     return (
-        <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-            <Box sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                p: 3,
-                backgroundColor: 'background.paper',
-                borderRadius: 3,
-                boxShadow: 1,
-            }}>
+        <Grid item xs={12} md={4} sx={{ textAlign: 'center', height: '100%' }}>
+            <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, borderRadius: 3 }}>
                 <LargeAvatar 
                     src={`${serverURL}${userData.image}`} 
                     alt={userData.firstName + userData.lastName}
@@ -105,7 +97,7 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ userData }) => {
                     open={isContactDialogOpen}
                     onClose={handleCloseContactDialog}
                 />
-            </Box>
+            </Paper>
         </Grid>
     );
 };
