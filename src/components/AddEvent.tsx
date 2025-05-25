@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, TextField, Button, Typography, MenuItem } from '@mui/material';
+import { Box, TextField, Button, Typography, MenuItem, Alert } from '@mui/material';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import { Address, Event, EventErrors, Location } from '../types/event';
+import { useAuth } from '../context/AuthContext';
 
 declare global {
     interface Window {
@@ -13,6 +14,11 @@ declare global {
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
+interface Category {
+    _id: string;
+    name: string;
+}
+
 const AddEvent = () => {
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -21,13 +27,35 @@ const AddEvent = () => {
     const [city, setCity] = useState('');
     const [country, setCountry] = useState('');
     const [location, setLocation] = useState<Location | null>(null);
-    const [eventTitle, setEventTitle] = useState('');
     const [date, setDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [difficultyLevel, setDifficultyLevel] = useState<number | ''>('');
+    const [category, setCategory] = useState('');
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loadingCategories, setLoadingCategories] = useState(true);
+    const [categoryError, setCategoryError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const [errors, setErrors] = useState<EventErrors>({});
+
+    const { user } = useAuth();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(`${serverURL}/categories`);
+                setCategories(response.data);
+                setCategoryError(null);
+            } catch (err) {
+                console.error("Error fetching categories:", err);
+                setCategoryError("Failed to load categories.");
+            }
+            setLoadingCategories(false);
+        };
+
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const loadAutocomplete = () => {
@@ -77,7 +105,6 @@ const AddEvent = () => {
     const validate = () => {
         const newErrors: EventErrors = {};
 
-        if (!eventTitle) newErrors.eventTitle = 'Event title is required';
         if (!addressLine1) newErrors.addressLine1 = 'Address Line 1 is required';
         if (!city) newErrors.city = 'City is required';
         if (!country) newErrors.country = 'Country is required';
@@ -87,12 +114,17 @@ const AddEvent = () => {
         if (!difficultyLevel) newErrors.difficultyLevel = 'Difficulty level is required';
         if (startTime && endTime && startTime >= endTime) newErrors.time = 'End time must be after start time';
         if (!location) newErrors.location = 'Valid location is required';
+        if (!category) newErrors.category = 'Category is required';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async () => {
+        setErrors({});
+        setCategoryError(null);
+        setSuccessMessage(null);
+
         if (!validate()) return;
 
         const start = dayjs(`${date}T${startTime}`);
@@ -100,6 +132,7 @@ const AddEvent = () => {
         const duration = end.diff(start, 'hour');
 
         const eventBody = {
+            category,
             address: {
                 addressLine1,
                 addressLine2,
@@ -113,15 +146,31 @@ const AddEvent = () => {
             date: start.toISOString(),
             duration,
             difficultyLevel,
-            organizer: 'user-guid-1234', // Replace with actual organizer/user id
-            title: eventTitle,
+            organizer: user?.id || '',
         };
 
         try {
             const res = await axios.post(`${serverURL}/events`, eventBody);
             console.log('Event created:', res.data);
+            setSuccessMessage('Event created successfully!');
+
+            setAddressLine1('');
+            setAddressLine2('');
+            setCity('');
+            setCountry('');
+            setLocation(null);
+            if (inputRef.current) {
+                inputRef.current.value = '';
+            }
+            setDate('');
+            setStartTime('');
+            setEndTime('');
+            setDifficultyLevel('');
+            setCategory('');
+
         } catch (err) {
             console.error('Error creating event:', err);
+            setErrors(prev => ({ ...prev, submit: 'Failed to create event. Please try again.' }));
         }
     };
 
@@ -129,12 +178,25 @@ const AddEvent = () => {
         <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4 }}>
             <Typography variant="h5" mb={2}>Add Event</Typography>
 
+            {successMessage && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                    {successMessage}
+                </Alert>
+            )}
+
+            {errors.submit && (
+                 <Alert severity="error" sx={{ mb: 2 }}>
+                     {errors.submit}
+                 </Alert>
+            )}
+
             <TextField
                 fullWidth
                 inputRef={inputRef}
                 name="ignore-address-autofill"
                 autoComplete="off"
                 label="Search Address"
+                margin="normal"
                 inputProps={{
                     autoComplete: 'new-password',
                     form: { autoComplete: 'off' },
@@ -182,17 +244,6 @@ const AddEvent = () => {
                     onChange={(e) => setCountry(e.target.value)}
                     error={!!errors.country}
                     helperText={errors.country}
-                />
-            </Box>
-
-            <Box mt={2}>
-                <TextField
-                    fullWidth
-                    label="Event Title"
-                    value={eventTitle}
-                    onChange={(e) => setEventTitle(e.target.value)}
-                    error={!!errors.eventTitle}
-                    helperText={errors.eventTitle}
                 />
             </Box>
 
@@ -250,6 +301,29 @@ const AddEvent = () => {
                             {level}
                         </MenuItem>
                     ))}
+                </TextField>
+            </Box>
+
+            <Box mt={2}>
+                <TextField
+                    fullWidth
+                    select
+                    label="Category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    error={!!errors.category || !!categoryError}
+                    helperText={errors.category || categoryError}
+                    disabled={loadingCategories}
+                >
+                    {loadingCategories ? (
+                        <MenuItem value="" disabled>Loading categories...</MenuItem>
+                    ) : (
+                        categories.map((option) => (
+                            <MenuItem key={option._id} value={option._id}>
+                                {option.name}
+                            </MenuItem>
+                        ))
+                    )}
                 </TextField>
             </Box>
 

@@ -31,6 +31,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import EditIcon from '@mui/icons-material/Edit';
 import SportsHandballIcon from '@mui/icons-material/SportsHandball';
+import EventIcon from '@mui/icons-material/Event';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
@@ -343,7 +344,7 @@ const Profile: React.FC = () => {
                             >
                                 Edit Profile
                             </Button>
-                            {userData.roles.includes('user') && (
+                            {!userData.roles.includes('coach') && (
                                 <Button
                                     variant="outlined"
                                     startIcon={<SportsHandballIcon />}
@@ -356,6 +357,21 @@ const Profile: React.FC = () => {
                                     }}
                                 >
                                     Become a Coach
+                                </Button>
+                            )}
+                            {userData.roles.includes('coach') && (
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<EventIcon />}
+                                    onClick={() => navigate('/add-event')}
+                                    sx={{
+                                        borderWidth: 2,
+                                        '&:hover': {
+                                            borderWidth: 2
+                                        }
+                                    }}
+                                >
+                                    Add Event
                                 </Button>
                             )}
                         </Stack>

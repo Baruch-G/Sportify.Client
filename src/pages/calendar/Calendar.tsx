@@ -1,9 +1,9 @@
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import { format, parse, startOfWeek, getDay, addDays, subDays } from 'date-fns'
+import { format, parse, startOfWeek, getDay, addDays, subDays, startOfMonth, endOfMonth, endOfWeek, startOfDay, endOfDay, isWithinInterval } from 'date-fns'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { enUS } from 'date-fns/locale/en-US'
 import './Calendar.css'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import getEvents from '../../api/EventsApi'
 import { Event } from '../../models/Event'
 import EventCard from '../../components/EventCard/EventCard'
@@ -24,6 +24,7 @@ const MyCalendar = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [date, setDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState(window.innerWidth <= 768 ? 'week' : 'month');
   const selectedEventRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,6 +59,33 @@ const MyCalendar = () => {
     fetchEvents();
   }, []);
 
+  const visibleEvents = useMemo(() => {
+    let startDate, endDate;
+
+    switch (currentView) {
+      case 'month':
+        startDate = startOfMonth(date);
+        endDate = endOfMonth(date);
+        break;
+      case 'week':
+        startDate = startOfWeek(date, { locale: locales['en-US'] });
+        endDate = endOfWeek(date, { locale: locales['en-US'] });
+        break;
+      case 'day':
+        startDate = startOfDay(date);
+        endDate = endOfDay(date);
+        break;
+      default:
+        startDate = startOfWeek(date, { locale: locales['en-US'] });
+        endDate = endOfWeek(date, { locale: locales['en-US'] });
+    }
+
+    return events.filter(event => {
+      const eventDate = new Date(event.date);
+      return isWithinInterval(eventDate, { start: startDate, end: endDate });
+    });
+  }, [events, date, currentView]);
+
   useEffect(() => {
     if (selectedEvent && selectedEventRef.current) {
       selectedEventRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -65,6 +93,11 @@ const MyCalendar = () => {
   }, [selectedEvent]);
 
   const handleSelectEvent = (event: any) => {
+    const eventDate = new Date(event.start);
+    if (currentView === 'month' && eventDate.getMonth() !== date.getMonth()) {
+      // Do not select events outside the current month in month view
+      return;
+    }
     setSelectedEvent(event.resource);
   };
 
@@ -75,6 +108,7 @@ const MyCalendar = () => {
   const handleViewChange = (newView: string) => {
     // Reset to current date when changing views
     setDate(new Date());
+    setCurrentView(newView);
   };
 
   return (
@@ -114,7 +148,7 @@ const MyCalendar = () => {
               )
             ) : (
               // On desktop, show all events
-              events.map((event) => (
+              visibleEvents.map((event) => (
                 <div key={event._id} ref={selectedEvent?._id === event._id ? selectedEventRef : null}>
                   <EventCard
                     event={event}
@@ -145,6 +179,9 @@ const MyCalendar = () => {
           selected={selectedEvent ? [selectedEvent] : []}
           eventPropGetter={(event) => {
             const categoryColor = event.resource.category.color;
+            const eventDate = new Date(event.start);
+            const isOutsideMonth = currentView === 'month' && (eventDate.getMonth() !== date.getMonth());
+
             return {
               className: event.selected ? 'selected-event' : '',
               style: {
@@ -152,6 +189,10 @@ const MyCalendar = () => {
                 backgroundColor: event.selected ? categoryColor : 'transparent',
                 borderColor: categoryColor,
                 color: event.selected ? 'white' : categoryColor,
+                opacity: isOutsideMonth ? 0.5 : 1,
+                cursor: isOutsideMonth ? 'default' : 'pointer',
+                transform: isOutsideMonth ? 'none' : 'translateY(-1px)',
+                boxShadow: isOutsideMonth ? '0 2px 4px rgba(0, 0, 0, 0.1)' : '0 4px 8px rgba(0, 0, 0, 0.15)',
               } as React.CSSProperties
             }
           }}

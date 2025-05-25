@@ -158,12 +158,27 @@ function EventList() {
   const pastEvents = filteredEvents.filter(event => new Date(event.date) <= new Date());
 
   return (
-    <Box style={{ margin: '30px', maxWidth: '1300px', marginLeft: 'auto', marginRight: 'auto' }}>
+    <Box sx={{
+      py: 5,
+      px: { xs: 2, sm: 3, md: 4 },
+      maxWidth: '1200px',
+      mx: 'auto',
+      backgroundColor: '#f4f6f8',
+    }}>
       {/* Filters and Sort Section */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6} md={3}>
-            <FormControl fullWidth>
+      <Paper sx={{
+        p: { xs: 2, sm: 3 },
+        mb: 5,
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.07)',
+        border: '1px solid #e0e0e0'
+      }}>
+        <Typography variant="h6" sx={{ mb: 2.5, fontWeight: 600, color: 'text.primary' }}>
+          Filter & Sort Events
+        </Typography>
+        <Grid container spacing={2.5} alignItems="center">
+          <Grid item xs={12} sm={6} md={2.4}>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Category</InputLabel>
               <Select
                 value={categoryFilter}
@@ -177,8 +192,8 @@ function EventList() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <FormControl fullWidth>
+          <Grid item xs={12} sm={6} md={2.4}>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Difficulty</InputLabel>
               <Select
                 value={difficultyFilter}
@@ -192,28 +207,28 @@ function EventList() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="Start Date"
                 value={dateRange[0]}
                 onChange={(newValue: Date | null) => setDateRange([newValue, dateRange[1]])}
-                slotProps={{ textField: { fullWidth: true } }}
+                slotProps={{ textField: { fullWidth: true, variant: "outlined" } }}
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={2.4}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 label="End Date"
                 value={dateRange[1]}
                 onChange={(newValue: Date | null) => setDateRange([dateRange[0], newValue])}
-                slotProps={{ textField: { fullWidth: true } }}
+                slotProps={{ textField: { fullWidth: true, variant: "outlined" } }}
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
+          <Grid item xs={12} sm={12} md={2.4}>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Sort By</InputLabel>
               <Select
                 value={sortBy}
@@ -231,9 +246,11 @@ function EventList() {
 
       {/* Upcoming Events Section */}
       {upcomingEvents.length > 0 && (
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" sx={{ mb: 2 }}>Upcoming Events</Typography>
-          <Grid container spacing={2}>
+        <Box sx={{ mb: 5 }}>
+          <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: 'text.primary' }}>
+            Upcoming Events
+          </Typography>
+          <Grid container spacing={3}>
             {upcomingEvents.map((event) => (
               <Grid item xs={12} sm={6} md={4} key={event._id}>
                 <EventItem onClick={() => navigate(`/events/${event._id}`)} event={event} />
@@ -245,9 +262,11 @@ function EventList() {
 
       {/* Past Events Section */}
       {pastEvents.length > 0 && (
-        <Box>
-          <Typography variant="h4" sx={{ mb: 2 }}>Past Events</Typography>
-          <Grid container spacing={2}>
+        <Box sx={{mb: 4}}>
+          <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold', color: 'text.primary' }}>
+            Past Events
+          </Typography>
+          <Grid container spacing={3}>
             {pastEvents.map((event) => (
               <Grid item xs={12} sm={6} md={4} key={event._id}>
                 <EventItem onClick={() => navigate(`/events/${event._id}`)} event={event} />
@@ -259,9 +278,14 @@ function EventList() {
 
       {/* No Events Message */}
       {filteredEvents.length === 0 && (
-        <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
-          No events found matching your criteria
-        </Typography>
+        <Paper sx={{ textAlign: 'center', mt: 5, p:4, borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+          <Typography variant="h5" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+            No events found matching your criteria.
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'text.hint', mt: 1 }}>
+            Try adjusting your filters or check back later!
+          </Typography>
+        </Paper>
       )}
     </Box>
   );
