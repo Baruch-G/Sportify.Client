@@ -26,6 +26,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import PersonIcon from '@mui/icons-material/Person';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import ContactInformation from './ContactInformation/ContactInformation';
 
 const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 
@@ -50,6 +51,15 @@ function EventDetails() {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [isContactDialogOpen, setIsContactDialogOpen] = React.useState(false);
+
+  const handleOpenContactDialog = () => {
+    setIsContactDialogOpen(true);
+  };
+
+  const handleCloseContactDialog = () => {
+    setIsContactDialogOpen(false);
+  };
 
   React.useEffect(() => {
     async function getEventAndOrganizer() {
@@ -397,6 +407,7 @@ function EventDetails() {
                   textTransform: 'none',
                   fontSize: '1.1rem'
                 }}
+                onClick={handleOpenContactDialog}
               >
                 Join Event
               </Button>
@@ -404,6 +415,13 @@ function EventDetails() {
           </Grid>
         </Grid>
       </Paper>
+      {event?.organizer && (
+        <ContactInformation
+          userData={event.organizer}
+          open={isContactDialogOpen}
+          onClose={handleCloseContactDialog}
+        />
+      )}
     </Container>
   );
 }

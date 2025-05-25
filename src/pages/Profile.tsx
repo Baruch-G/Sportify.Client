@@ -549,7 +549,7 @@ const Profile: React.FC = () => {
                                                 {userData.address.addressLine1}, {userData.address.city}
                                             </Typography>
                                         </Box>
-                                        {userData.phoneNumber && (
+                                        {userData.phone && (
                                             <Box sx={{ 
                                                 display: 'flex', 
                                                 alignItems: 'center',
@@ -563,7 +563,7 @@ const Profile: React.FC = () => {
                                             }}>
                                                 <PhoneIcon sx={{ color: 'primary.main', mr: 2 }} />
                                                 <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                                                    {userData.phoneNumber}
+                                                    {userData.phone}
                                                 </Typography>
                                             </Box>
                                         )}

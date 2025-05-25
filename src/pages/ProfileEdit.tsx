@@ -104,10 +104,21 @@ const ProfileEdit: React.FC = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        if (name.startsWith('address.')) {
+            const addressField = name.split('.')[1];
+            setFormData(prev => ({
+                ...prev,
+                address: {
+                    ...prev.address,
+                    [addressField]: value
+                }
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -165,6 +176,7 @@ const ProfileEdit: React.FC = () => {
                             <ProfileImageUpload
                                 token={accessToken || ''}
                                 onSubmit={() => {}}
+                                existingImageUrl={user?.image ? `${import.meta.env.VITE_SPORTIFY_SERVER_URL}${user.image}` : undefined}
                             />
                         </Grid>
 
@@ -269,7 +281,7 @@ const ProfileEdit: React.FC = () => {
                             <TextField
                                 fullWidth
                                 label="Address"
-                                name="address"
+                                name="address.addressLine1"
                                 value={formData.address.addressLine1}
                                 onChange={handleInputChange}
                                 required
@@ -279,7 +291,7 @@ const ProfileEdit: React.FC = () => {
                             <TextField
                                 fullWidth
                                 label="City"
-                                name="city"
+                                name="address.city"
                                 value={formData.address.city}
                                 onChange={handleInputChange}
                                 required

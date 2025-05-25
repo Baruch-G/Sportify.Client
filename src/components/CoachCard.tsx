@@ -48,9 +48,9 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                             className="coach-avatar"
                             src={coach.image ? `${serverURL}${coach.image}` : `${serverURL}/uploads/profile-images/default-avatar.jpg`}
                             alt={coach.firstName + coach.lastName}
-                            sx={{ 
-                                width: 72, 
-                                height: 72, 
+                            sx={{
+                                width: 72,
+                                height: 72,
                                 mr: 2,
                                 border: '3px solid',
                                 borderColor: 'primary.main',
@@ -59,10 +59,10 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                             }}
                         />
                         <Box sx={{ flex: 1 }}>
-                            <Typography 
-                                variant="h6" 
-                                component="div" 
-                                sx={{ 
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{
                                     fontWeight: 700,
                                     background: 'linear-gradient(45deg, #e37127 30%, #e37243 90%)',
                                     backgroundClip: 'text',
@@ -74,10 +74,10 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                             >
                                 {`${coach.firstName} ${coach.lastName}`}
                             </Typography>
-                            <Stack 
-                                direction="row" 
-                                spacing={1} 
-                                sx={{ 
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{
                                     mt: 0.5,
                                     '& .MuiChip-root': {
                                         height: 24,
@@ -94,7 +94,7 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                                     size="small"
                                     color="primary"
                                     variant="outlined"
-                                    sx={{ 
+                                    sx={{
                                         fontWeight: 500,
                                         borderWidth: 1.5,
                                         '&:hover': {
@@ -108,7 +108,7 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                                         size="small"
                                         color="secondary"
                                         variant="outlined"
-                                        sx={{ 
+                                        sx={{
                                             fontWeight: 500,
                                             borderWidth: 1.5,
                                             '&:hover': {
@@ -122,10 +122,10 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                     </Box>
 
                     <Box sx={{ mb: 3 }}>
-                        <Typography 
-                            variant="subtitle2" 
-                            color="text.secondary" 
-                            sx={{ 
+                        <Typography
+                            variant="subtitle2"
+                            color="text.secondary"
+                            sx={{
                                 mb: 1.5,
                                 fontWeight: 600,
                                 display: 'flex',
@@ -143,9 +143,9 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                         >
                             Specializations
                         </Typography>
-                        <Box sx={{ 
-                            display: 'flex', 
-                            flexWrap: 'wrap', 
+                        <Box sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
                             gap: 1,
                             '& .MuiChip-root': {
                                 fontWeight: 500,
@@ -177,17 +177,17 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                         </Box>
                     </Box>
 
-                    <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
                         mb: 3,
                         p: 1.5,
                         borderRadius: 2,
                         bgcolor: 'background.default'
                     }}>
                         <LocationOnIcon sx={{ color: 'primary.main', fontSize: 20, mr: 1 }} />
-                        <Typography 
-                            variant="body2" 
+                        <Typography
+                            variant="body2"
                             color="text.secondary"
                             sx={{ fontWeight: 500 }}
                         >
@@ -195,19 +195,19 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                         </Typography>
                     </Box>
 
-                    <Box sx={{ 
+                    <Box sx={{
                         mt: 'auto',
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         alignItems: 'center',
                         pt: 2,
                         borderTop: '1px solid',
                         borderColor: 'divider'
                     }}>
-                        <Typography 
-                            variant="subtitle1" 
-                            color="primary" 
-                            sx={{ 
+                        <Typography
+                            variant="subtitle1"
+                            color="primary"
+                            sx={{
                                 fontWeight: 700,
                                 display: 'flex',
                                 alignItems: 'center',
@@ -215,12 +215,12 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                             }}
                         >
                             Book Now
-                            <Box 
-                                component="span" 
-                                sx={{ 
-                                    width: 8, 
-                                    height: 8, 
-                                    borderRadius: '50%', 
+                            <Box
+                                component="span"
+                                sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
                                     bgcolor: 'primary.main',
                                     animation: 'pulse 2s infinite',
                                     '@keyframes pulse': {
@@ -237,29 +237,31 @@ const CoachCard: React.FC<CoachCardProps> = ({ coach, onClick }) => {
                                             boxShadow: '0 0 0 0 rgba(227, 113, 39, 0)'
                                         }
                                     }
-                                }} 
-                            />
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                            <Rating 
-                                value={4.9} 
-                                precision={0.1} 
-                                readOnly 
-                                size="small"
-                                sx={{
-                                    '& .MuiRating-iconFilled': {
-                                        color: 'primary.main'
-                                    }
                                 }}
                             />
-                            <Typography 
-                                variant="body2" 
-                                color="text.secondary"
-                                sx={{ fontWeight: 600 }}
-                            >
-                                4.9
-                            </Typography>
-                        </Box>
+                        </Typography>
+                        {coach.coachProfile.averageRating && coach.coachProfile.totalReviews && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Rating
+                                    value={4.9}
+                                    precision={0.1}
+                                    readOnly
+                                    size="small"
+                                    sx={{
+                                        '& .MuiRating-iconFilled': {
+                                            color: 'primary.main'
+                                        }
+                                    }}
+                                />
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                    sx={{ fontWeight: 600 }}
+                                >
+                                    {coach.coachProfile.averageRating.toFixed(1)} ({coach.coachProfile.totalReviews})
+                                </Typography>
+                            </Box>
+                        )}
                     </Box>
                 </CardContent>
             </Card>

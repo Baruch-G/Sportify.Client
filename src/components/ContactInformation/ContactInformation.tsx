@@ -34,7 +34,7 @@ const ContactInformation: React.FC<ContactInformationProps> = ({ userData, open,
                             <TextField
                                 fullWidth
                                 label="Phone"
-                                value={userData.phoneNumber || 'Not provided'}
+                                value={userData.phone || 'Not provided'}
                                 InputProps={{ readOnly: true }}
                             />
                         </Grid>
