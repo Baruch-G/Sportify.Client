@@ -18,12 +18,13 @@ const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
 interface ProfileImageUploadProps {
   token: string;
   onSubmit: () => void;
+  existingImageUrl?: string;
 }
 
-function ProfileImageUpload({ token, onSubmit }: ProfileImageUploadProps) {
+function ProfileImageUpload({ token, onSubmit, existingImageUrl }: ProfileImageUploadProps) {
   const theme = useTheme();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(existingImageUrl || null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user, logout, setImage } = useAuth();

@@ -57,6 +57,7 @@ const Navbar: React.FC = () => {
         position: 'sticky',
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
         borderBottom: '1px solid rgba(0,0,0,0.1)',
+        zIndex: 1000,
       }}
       position="static"
     >

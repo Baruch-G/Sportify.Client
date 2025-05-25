@@ -60,7 +60,7 @@ const MyCalendar = () => {
   }, []);
 
   const visibleEvents = useMemo(() => {
-    let startDate, endDate;
+    let startDate: Date, endDate: Date;
 
     switch (currentView) {
       case 'month':
