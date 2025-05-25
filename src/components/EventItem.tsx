@@ -1,122 +1,120 @@
 import React from 'react'
 import { Event } from '../models/Event'
-import { Card, CardContent, Typography, Box } from '@mui/material'
+import { Card, CardContent, Typography, Box, Avatar } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import CategoryIcon from '@mui/icons-material/Category'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun'
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi'
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer'
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement'
-import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
-import SportsTennisIcon from '@mui/icons-material/SportsTennis'
-import PoolIcon from '@mui/icons-material/Pool'
-import KayakingIcon from '@mui/icons-material/Kayaking'
-import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike'
-import DownhillSkiing from '@mui/icons-material/DownhillSkiing'
 import { sportToIconMap } from '../data/sportsMap'
+
 interface EventItemProps {
     event: Event
     onClick: () => void
 }
 
 const EventItem = (props: EventItemProps) => {
+    const eventDate = new Date(props.event.date);
+    const formattedDate = eventDate.toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const formattedTime = eventDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false });
+    const serverURL = import.meta.env.VITE_SPORTIFY_SERVER_URL;
+
     return (
         <Card onClick={props.onClick} sx={{
             position: 'relative',
-            maxWidth: 345,
-            m: 2,
+            m: 1.5,
             cursor: 'pointer',
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: 1,
-            border: '1px solid',
-            borderColor: 'divider',
-            background: 'linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            height: '100%',
+            borderRadius: '12px',
+            border: `1px solid #e0e0e0`,
+            backgroundColor: '#fff',
+            boxShadow: `0 4px 12px rgba(0,0,0,0.07)`,
+            transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+            overflow: 'hidden',
             '&:hover': {
-                boxShadow: '0 4px 8px rgba(227, 113, 39, 0.15)',
-                transform: 'translateY(-4px)',
-                borderColor: 'grey',
+                boxShadow: `0 8px 20px rgba(0,0,0,0.12)`,
+                transform: 'translateY(-5px)',
+                borderColor: 'primary.main',
             },
-            '&:before': {
-                content: '""',
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: '6px',
-                borderRadius: '4px 0 0 4px'
-            }
         }}>
             <CardContent sx={{
-                height: '100%',
+                flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2.5,
-                p: 3
+                gap: 2,
+                p: '20px'
             }}>
                 <Box sx={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1.5,
-                    pb: 1,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider'
                 }}>
                     <Box sx={{
                         color: 'primary.main',
                         display: 'flex',
                         alignItems: 'center',
-                        fontSize: '1.5rem'
+                        fontSize: '2rem'
                     }}>
-                        {sportToIconMap[props.event.category.name.replace(' ', '-').toLowerCase() as keyof typeof sportToIconMap]}
+                        {sportToIconMap[props.event.category.name.replace(' ', '-').toLowerCase() as keyof typeof sportToIconMap] || <CategoryIcon sx={{fontSize: 'inherit'}} />}
                     </Box>
-                    <Typography variant="h5" component="div" noWrap sx={{
-                        fontWeight: 600,
-                        color: 'text.primary'
+                    <Typography variant="h5" component="div" sx={{
+                        fontWeight: '600',
+                        color: 'text.primary',
+                        lineHeight: 1.3,
                     }}>
                         {props.event.category.name}
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <CalendarTodayIcon sx={{
-                        color: 'success.main',
-                        flexShrink: 0,
-                        fontSize: '1.25rem'
-                    }} />
-                    <Typography variant="body1" noWrap sx={{ color: 'text.secondary' }}>
-                        {new Date(props.event.date).toLocaleDateString(undefined, {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
-                    </Typography>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CalendarTodayIcon sx={{ color: 'grey.600', fontSize: '1.2rem' }} />
+                        <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                            {formattedDate}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <LocationOnIcon sx={{ color: 'grey.600', fontSize: '1.2rem' }} />
+                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                            {props.event.address.addressLine1}
+                            {props.event.address.addressLine2 && `, ${props.event.address.addressLine2}`}
+                            {`, ${props.event.address.city}`}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <AccessTimeIcon sx={{ color: 'grey.600', fontSize: '1.2rem' }} />
+                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                            {formattedTime} | {props.event.duration}h
+                        </Typography>
+                    </Box>
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <LocationOnIcon sx={{
-                        color: 'error.main',
-                        flexShrink: 0,
-                        fontSize: '1.25rem'
-                    }} />
-                    <Typography variant="body1" noWrap sx={{ color: 'text.secondary' }}>
-                        {props.event.address.addressLine1}
-                        {props.event.address.addressLine2 && `, ${props.event.address.addressLine2}`}
-                        {`, ${props.event.address.city}`}
-                    </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <AccessTimeIcon sx={{
-                        color: 'error.main',
-                        flexShrink: 0,
-                        fontSize: '1.25rem'
-                    }} />
-                    <Typography variant="body1" noWrap sx={{ color: 'text.secondary' }}>
-                        {new Date(props.event.date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })} | {props.event.duration}h
+                <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1.5, 
+                    mt: 'auto',
+                    pt: 2, 
+                    borderTop: `1px solid #eeeeee`,
+                }}>
+                    <Avatar 
+                        sx={{ width: 36, height: 36, bgcolor: 'secondary.main' }}
+                        src={`${serverURL}${props.event.organizer?.image}` || undefined}
+                        alt={props.event.organizer?.firstName || 'Organizer'}
+                    >
+                        {props.event.organizer?.firstName ? props.event.organizer.firstName.substring(0,1).toUpperCase() : 'O'}
+                    </Avatar>
+                    <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 500 }}>
+                        {props.event.organizer?.firstName || 'Sportify Organizer'}
+                        {props.event.organizer?.lastName && ` ${props.event.organizer.lastName}`}
                     </Typography>
                 </Box>
             </CardContent>

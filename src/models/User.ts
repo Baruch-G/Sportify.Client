@@ -13,6 +13,7 @@ export interface User {
     createdAt: Date;
     wheight: number;
     gender: "male" | "female";
+    isCoach: boolean;
     address: {
         addressLine1: string;
         addressLine2?: string;
